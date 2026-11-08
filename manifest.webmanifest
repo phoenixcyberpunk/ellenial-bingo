@@ -1,6 +1,6 @@
 {
-  "name": "ellenial bingo",
-  "short_name": "bingo",
+  "name": "Bingo · Ellenial",
+  "short_name": "Bingo",
   "description": "Create a simple bingo card fast and easy. No information stored anywhere.",
   "start_url": "/",
   "scope": "/",
