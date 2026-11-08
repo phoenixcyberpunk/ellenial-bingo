@@ -27,6 +27,12 @@ Read this first in every session. Social bingo maker under **Ellenial**, English
 - 8 Nov 2026, Playwright at 390×844, dark and light, English and Swedish: all four screens, 10 unique cards, two-lines rule, PDF made (5 pages for 10 cards) and reopened to the same cards and rule, a non-bingo PDF gives a friendly note, long Swedish squares and a 39-letter word fit the picture. No console errors.
 - Not testable here: the real share sheet on iPhone/Android. Ellen tests that on her phone.
 
+## Decisions (Ellen, 8 Nov 2026, evening)
+- App icon: Ellen's own drawing (bingo card, red dots, green winning diagonal) replaces the flower on the tile; "bingo" in Fraunces stays bottom-left. Tile lavender-blue #DCDCF5, TEMPORARY: Ellen will upload all the other icons and compare. Master made from her 1024 px original (art/drawings/bingo.png in the ellenial repo); `icons/` holds 512, 192 and apple-touch 180.
+- Footer on every picture and PDF card: "Created in bingo.ellenial.app · Free, no ads, no trackers. Bingo!" (Swedish: "Skapad i bingo.ellenial.app · Gratis, ingen reklam, inga spårare. Bingo!"). "Bingo!" chosen over "jackpot" (a gambling word).
+- Help is opt-in and the same in every app: a "?" top-right opens "How it works" (3 steps). Never shown unasked. Built here as the shared `ellenial-help.js` + `ellenial-help.css` (copy unchanged; they read the app's colour variables). Other apps still to get it.
+- Listed on ellenial.app as Alpha with Ellen's descriptions (en/sv).
+
 ## Ship check (8 Nov 2026, against Public)
 - Repo history clean (no keys or personal data; commits as Claude <noreply@anthropic.com>); AGPL-3.0; innerHTML only on constant SVG.
 - Crafted-PDF fuzz (HTML in fields, 5 000-char text, bad/duplicate/500 cards, wrong types, `__proto__`, wrong version, payload past 64 KB, garbage, empty, bad base64/JSON): all rejected or cleaned, no injection, no errors. Fix: duplicate cards in a PDF are now dropped.
@@ -34,7 +40,8 @@ Read this first in every session. Social bingo maker under **Ellenial**, English
 - Passes Alpha (and Beta once fonts are credited). Public blocked by: Ellen's app icon + manifest, the shared "how it works in 3 steps" onboarding gate, `bingo` in credits.json for Fraunces, DM Sans and Fontsource, and the library card (her description). Cost receipt: nothing to add (static, inside "hosting now $0").
 
 ## Open
-- App icon (Ellen's own art, per the Ellenial icon template) and manifest.
+- Final tile colour once Ellen has compared all the icons.
+- Roll out the shared "?" help to Quiz, Poll, Party games and the other apps (each needs its own 3 steps, shown to Ellen first).
 - List on ellenial.app when Ellen decides (alpha).
 - (Done 8 Nov) The PDF prints on white to save ink; shared pictures keep the peach ground.
 - Later: fill together (live room), 4×4 and 5×5, a tappable card in the browser.

@@ -22,11 +22,16 @@ Part of [Ellenial](https://ellenial.app): free tools made by people, for people.
 - Sharing: the phone's own share menu (Web Share API) where it can take files; otherwise the picture downloads.
 - PDF: written by hand in `app.js` (A4, two cards per page with a cut line or one bigger card per page, the same cards on white to save ink, as JPEG). The bingo rides along as a comment line, `%EllenialBingo:<base64url JSON>`.
 - English and Swedish, picked from the phone's language with a switch on the first screen.
+- Help: a "?" in the top-right corner of every screen opens "How it works" in three steps. Nothing pops up by itself.
+- Every picture and PDF card ends with "Created in bingo.ellenial.app · Free, no ads, no trackers. Bingo!"
 
 | Path | What it is |
 | --- | --- |
 | `index.html`, `styles.css`, `app.js` | The app |
 | `ellenial-theme.js` | Shared Ellenial Auto / Light / Dark switch, unchanged from ellenial maps |
+| `ellenial-help.js`, `ellenial-help.css` | Shared Ellenial "?" button and "How it works" sheet: help only when someone asks for it. Started here, meant to be copied unchanged into every Ellenial app |
+| `icons/`, `manifest.webmanifest` | App icon: Ellen's drawing on a lavender-blue tile, for the home screen |
+| `drawings/bingo.png` | Ellen's bingo drawing (also at ellenial.app/drawings) |
 | `fonts/` | Self-hosted Fraunces and DM Sans with their licences |
 
 ## Run it locally
@@ -39,7 +44,7 @@ A static site on Vercel's free tier. Nothing else.
 
 ## Credits
 
-- Product and design: Ellen Nilsson. Code: written with Claude.
+- Product, design and the bingo drawing: Ellen Nilsson (drawing licensed CC BY-NC-SA 4.0, see [ellenial.app/drawings](https://ellenial.app/drawings)). Code: written with Claude.
 - Fonts: Fraunces (The Fraunces Project Authors) and DM Sans (The DM Sans Project Authors), SIL OFL 1.1, via Fontsource.
 
 ## Licence

@@ -8,7 +8,6 @@
   'use strict';
 
   var LIMITS = { title: 40, square: 80, minCards: 2, maxCards: 30 };
-  var ORIGIN = 'bingo.ellenial.app';
   var PDF_MARK = '%EllenialBingo:';
 
   /* ---------------- words (English and Swedish) ---------------- */
@@ -62,6 +61,16 @@
       startOver: 'Start a new bingo',
       madeWith: 'Made by me, Ellen, with the help of AI. Free, no ads, nothing tracked.',
       source: 'Source code',
+      madeIn: 'Created in bingo.ellenial.app · Free, no ads, no trackers. Bingo!',
+      help: {
+        label: 'How it works', title: 'How it works', lead: 'Three steps, about two minutes.', done: 'Got it', close: 'Close',
+        note: "Nothing is saved or sent anywhere. Close the tab and it's gone, except the files you download.",
+        steps: [
+          { title: 'Write your squares', text: '9 things that might happen, or 8 around a free middle. Stuck? Start from an example.' },
+          { title: 'Choose cards and how to win', text: 'How many players, and whether one line, two lines or a full card wins.' },
+          { title: 'Send a card to each player', text: 'Share a picture into the chat, or print the PDF. Keep the PDF: open it here again to play with the same cards.' }
+        ]
+      },
       fileCard: 'card', theme: 'Appearance', themeLabels: { auto: 'Auto', light: 'Light', dark: 'Dark' },
       examples: [
         { name: 'Party', title: 'Party bingo', items: ['Someone mentions the weather', 'A toast in another language', 'Someone arrives late', "A story you've heard before", 'A phone rings', 'Someone sings along', 'A selfie with the host', 'Someone says "just one more"', 'A laugh you can hear across the room'] },
@@ -118,6 +127,16 @@
       startOver: 'Gör en ny bingo',
       madeWith: 'Gjord av mig, Ellen, med hjälp av AI. Gratis, ingen reklam, ingen spårning.',
       source: 'Källkod',
+      madeIn: 'Skapad i bingo.ellenial.app · Gratis, ingen reklam, inga spårare. Bingo!',
+      help: {
+        label: 'Så funkar det', title: 'Så funkar det', lead: 'Tre steg, ungefär två minuter.', done: 'Uppfattat', close: 'Stäng',
+        note: 'Inget sparas eller skickas någonstans. Stäng fliken så är det borta, utom filerna du laddar ner.',
+        steps: [
+          { title: 'Skriv dina rutor', text: '9 saker som kan hända, eller 8 runt en fri mitt. Kört fast? Börja från ett exempel.' },
+          { title: 'Välj brickor och hur man vinner', text: 'Hur många spelare, och om en rad, två rader eller full bricka vinner.' },
+          { title: 'Skicka en bricka till varje spelare', text: 'Dela en bild i chatten, eller skriv ut PDF:en. Spara PDF:en: öppna den här igen för att spela med samma brickor.' }
+        ]
+      },
       fileCard: 'bricka', theme: 'Utseende', themeLabels: { auto: 'Auto', light: 'Ljust', dark: 'Mörkt' },
       examples: [
         { name: 'Fest', title: 'Festbingo', items: ['Någon pratar om vädret', 'En skål på ett annat språk', 'Någon kommer sent', 'En historia du hört förut', 'En telefon ringer', 'Någon sjunger med', 'En selfie med värden', 'Någon säger "bara en till"', 'Ett skratt som hörs i hela rummet'] },
@@ -247,9 +266,19 @@
       h('div', { class: 'bar-left' },
         backTo ? h('button', { class: 'round', 'aria-label': t().back, onclick: function () { go(backTo); } }, icon('back', 22)) : null,
         h('span', { class: 'wordmark', text: backTo && state.title ? state.title : 'bingo' })),
-      backTo ? null : h('button', { class: 'lang', lang: t().otherLang, onclick: function () {
-        lang = t().otherLang; store('eb:lang', lang); render();
-      } }, t().other));
+      h('div', { class: 'bar-right' },
+        backTo ? null : h('button', { class: 'lang', lang: t().otherLang, onclick: function () {
+          lang = t().otherLang; store('eb:lang', lang); render();
+        } }, t().other),
+        helpButton()));
+  }
+  // The shared Ellenial "?" (ellenial-help.js): help only when someone asks for it.
+  function helpButton() {
+    if (!window.EllenialHelp) return null;
+    var hp = t().help;
+    return EllenialHelp.button({ id: 'help', label: hp.label, onclick: function () {
+      EllenialHelp.open({ title: hp.title, lead: hp.lead, image: '/drawings/bingo.png', steps: hp.steps, note: hp.note, done: hp.done, close: hp.close });
+    } });
   }
 
   /* ---------------- shuffling ---------------- */
@@ -582,8 +611,9 @@
     var rule = fitText(ctx, t().winRule[state.win], '500 {s}px ' + SANS, W - pad * 2, 50, 38, 26);
     ctx.fillStyle = PAL.ink; ctx.font = '500 ' + rule.size + 'px ' + SANS;
     ctx.fillText(rule.lines[0], pad, below + 70);
-    ctx.fillStyle = PAL.muted; ctx.font = '400 30px ' + SANS;
-    ctx.fillText(ORIGIN, pad, H - pad + 6);
+    var made = fitText(ctx, t().madeIn, '400 {s}px ' + SANS, W - pad * 2, 40, 30, 22);
+    ctx.fillStyle = PAL.muted; ctx.font = '400 ' + made.size + 'px ' + SANS;
+    ctx.fillText(made.lines[0], pad, H - pad + 6);
     return cv;
   }
   function cardBlob(i) {
