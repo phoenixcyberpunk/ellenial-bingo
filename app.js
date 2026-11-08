@@ -265,7 +265,7 @@
     return h('div', { class: 'bar' },
       h('div', { class: 'bar-left' },
         backTo ? h('button', { class: 'round', 'aria-label': t().back, onclick: function () { go(backTo); } }, icon('back', 22)) : null,
-        h('span', { class: 'wordmark', text: backTo && state.title ? state.title : 'bingo' })),
+        (backTo && state.title ? h('span', { class: 'wordmark', text: state.title }) : h('span', { class: 'wordmark' }, h('span', { class: 'ellenial-eyebrow', text: 'Ellenial' }), 'Bingo'))),
       h('div', { class: 'bar-right' },
         backTo ? null : h('button', { class: 'lang', lang: t().otherLang, onclick: function () {
           lang = t().otherLang; store('eb:lang', lang); render();
