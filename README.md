@@ -19,7 +19,7 @@ Part of [Ellenial](https://ellenial.app): free tools made by people, for people.
 - How to win: one line, two lines or a full card, chosen by the person making the bingo and printed on every card.
 - Pictures: drawn on a canvas, 1080 × 1350 px (4:5, shown uncropped in chat apps), light palette so they read and print well. Long squares shrink, then wrap; a word is only split if it can't fit whole at the smallest size.
 - Sharing: the phone's own share menu (Web Share API) where it can take files; otherwise the picture downloads.
-- PDF: written by hand in `app.js` (A4, two cards per page with a cut line, the same pictures as JPEG). The bingo rides along as a comment line, `%EllenialBingo:<base64url JSON>`.
+- PDF: written by hand in `app.js` (A4, two cards per page with a cut line, the same cards on white to save ink, as JPEG). The bingo rides along as a comment line, `%EllenialBingo:<base64url JSON>`.
 - English and Swedish, picked from the phone's language with a switch on the first screen.
 
 | Path | What it is |

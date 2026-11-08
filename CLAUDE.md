@@ -17,7 +17,7 @@ Read this first in every session. Social bingo maker under **Ellenial**, English
 
 ## Build notes (8 Nov 2026)
 - Picture: canvas 1080×1350, always the light palette. `fitText` tries every size without splitting words first, then allows splits.
-- PDF: hand-written, A4, 2 cards per page, JPEG images. Payload line `%EllenialBingo:` + base64url JSON `{v:1,title,squares,count,win,cards:["031…"],lang}`. `openPdf` reads only the first 64 KB, then `parseBingo` validates everything (lengths, 9 non-empty squares, card strings `^[0-8]{9}$` with 9 distinct digits).
+- PDF: hand-written, A4, 2 cards per page, JPEG images, white print palette (`PAL_PRINT`); pictures use `PAL_SCREEN` (peach). Payload line `%EllenialBingo:` + base64url JSON `{v:1,title,squares,count,win,cards:["031…"],lang}`. `openPdf` reads only the first 64 KB, then `parseBingo` validates everything (lengths, 9 non-empty squares, card strings `^[0-8]{9}$` with 9 distinct digits).
 - Squares max 80 characters, title max 40.
 
 ## Testing
@@ -27,7 +27,7 @@ Read this first in every session. Social bingo maker under **Ellenial**, English
 ## Open
 - App icon (Ellen's own art, per the Ellenial icon template) and manifest.
 - List on ellenial.app when Ellen decides (alpha).
-- The PDF prints the peach background: fine on screen, uses ink. Option: a white "print" version.
+- (Done 8 Nov) The PDF prints on white to save ink; shared pictures keep the peach ground.
 - Later: fill together (live room), 4×4 and 5×5, a tappable card in the browser.
 
 ## Brand

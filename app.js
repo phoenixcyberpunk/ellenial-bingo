@@ -433,7 +433,10 @@
   /* ---------------- the card picture (canvas) ---------------- */
 
   // Always the light palette: it reads well in any chat and prints cleanly.
-  var PAL = { ground: '#FEF2E2', surface: '#FFFBF5', ink: '#1F1A2E', muted: '#575166', accent: '#342E86', onAccent: '#FFFBF5' };
+  var PAL_SCREEN = { ground: '#FEF2E2', surface: '#FFFBF5', ink: '#1F1A2E', muted: '#575166', accent: '#342E86', onAccent: '#FFFBF5' };
+  // The PDF prints on white to save ink (Ellen, 8 Nov 2026); the indigo lines and number stay.
+  var PAL_PRINT = { ground: '#FFFFFF', surface: '#FFFFFF', ink: '#1F1A2E', muted: '#575166', accent: '#342E86', onAccent: '#FFFFFF' };
+  var PAL = PAL_SCREEN;
   var W = 1080, H = 1350;   // 4:5, the shape chat apps show without cropping
   var DISPLAY = 'Fraunces, Georgia, serif', SANS = '"DM Sans", system-ui, sans-serif';
 
@@ -478,7 +481,8 @@
     var l2 = wrapLines(ctx, text, maxW), lhs = Math.round(small * 1.22), fit = Math.max(1, Math.floor(maxH / lhs));
     return { size: small, lines: l2.slice(0, fit), lh: lhs };
   }
-  function drawCard(i) {
+  function drawCard(i, forPrint) {
+    PAL = forPrint ? PAL_PRINT : PAL_SCREEN;
     var cv = document.createElement('canvas'); cv.width = W; cv.height = H;
     var ctx = cv.getContext('2d'), pad = 60, n = state.cards.length;
     ctx.fillStyle = PAL.ground; ctx.fillRect(0, 0, W, H);
@@ -635,7 +639,7 @@
   }
   function downloadPdf() {
     fontsReady().then(function () {
-      var imgs = state.cards.map(function (_, i) { return jpegBytes(drawCard(i)); });
+      var imgs = state.cards.map(function (_, i) { return jpegBytes(drawCard(i, true)); });
       download(buildPdf(imgs), slug() + '.pdf');
     });
   }
