@@ -59,7 +59,7 @@
       pdf: 'Download PDF to print', allPics: function (n) { return 'Save all ' + n + ' pictures'; },
       shareFoot: 'Prefer screenshots? That works too. Keep the PDF: open it here again to make new cards from the same squares.',
       startOver: 'Start a new bingo',
-      madeWith: 'Made by me, Ellen, with the help of AI. Free, no ads, nothing tracked.',
+      madeWith: 'Drawn and designed by me, Ellen, coded with the help of AI. Free, no ads, nothing tracked.',
       source: 'Source code',
       madeIn: 'Created in bingo.ellenial.app · Free, no ads, no trackers. Bingo!',
       help: {
@@ -125,7 +125,7 @@
       pdf: 'Ladda ner PDF för utskrift', allPics: function (n) { return 'Spara alla ' + n + ' bilder'; },
       shareFoot: 'Hellre skärmdumpar? Det går också bra. Spara PDF:en: öppna den här igen för att göra nya brickor med samma rutor.',
       startOver: 'Gör en ny bingo',
-      madeWith: 'Gjord av mig, Ellen, med hjälp av AI. Gratis, ingen reklam, ingen spårning.',
+      madeWith: 'Ritat och designat av mig, Ellen, kodat med hjälp av AI. Gratis, ingen reklam, ingen spårning.',
       source: 'Källkod',
       madeIn: 'Skapad i bingo.ellenial.app · Gratis, ingen reklam, inga spårare. Bingo!',
       help: {
