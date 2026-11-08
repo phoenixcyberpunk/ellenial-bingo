@@ -41,7 +41,7 @@ Read this first in every session. Social bingo maker under **Ellenial**, English
 - Passes Alpha (and Beta once fonts are credited). Public blocked by: Ellen's app icon + manifest, the shared "how it works in 3 steps" onboarding gate, `bingo` in credits.json for Fraunces, DM Sans and Fontsource, and the library card (her description). Cost receipt: nothing to add (static, inside "hosting now $0").
 
 ## Open
-- Final tile colour once Ellen has compared all the icons.
+- (Done 8 Nov) Compared with all the icons: new icon system = drawing centred on the tile colour, no name; Bingo keeps #DCDCF5. Home-screen name "Bingo", tab "Bingo · Ellenial", header has a small "Ellenial" above "Bingo". Details: doc `claude/ellenial-drawn-app-icons.md` in the claude.ai Project "Ellenial - Brand identity - Master".
 - Roll out the shared "?" help to Quiz, Poll, Party games and the other apps (each needs its own 3 steps, shown to Ellen first).
 - List on ellenial.app when Ellen decides (alpha).
 - (Done 8 Nov) The PDF prints on white to save ink; shared pictures keep the peach ground.
