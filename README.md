@@ -17,9 +17,10 @@ Part of [Ellenial](https://ellenial.app): free tools made by people, for people.
 - A plain web app: HTML, CSS and JavaScript, no build step, no framework, no libraries.
 - Cards: random orders of the 9 squares (`crypto.getRandomValues`, Fisher–Yates), never two the same. 2 to 30 cards, numbered "Card 3 of 8".
 - How to win: one line, two lines or a full card, chosen by the person making the bingo and printed on every card.
+- Free square in the middle: optional (off by default). With it on you write 8 squares, shuffled around a free centre marked with a star and the word "Free".
 - Pictures: drawn on a canvas, 1080 × 1350 px (4:5, shown uncropped in chat apps), light palette so they read and print well. Long squares shrink, then wrap; a word is only split if it can't fit whole at the smallest size.
 - Sharing: the phone's own share menu (Web Share API) where it can take files; otherwise the picture downloads.
-- PDF: written by hand in `app.js` (A4, two cards per page with a cut line, the same cards on white to save ink, as JPEG). The bingo rides along as a comment line, `%EllenialBingo:<base64url JSON>`.
+- PDF: written by hand in `app.js` (A4, two cards per page with a cut line or one bigger card per page, the same cards on white to save ink, as JPEG). The bingo rides along as a comment line, `%EllenialBingo:<base64url JSON>`.
 - English and Swedish, picked from the phone's language with a switch on the first screen.
 
 | Path | What it is |

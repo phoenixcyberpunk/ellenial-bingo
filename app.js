@@ -20,11 +20,17 @@
       makeLead: 'Write 9 things that might happen. Everyone gets the same 9, in their own order.',
       nameLabel: 'Name your bingo', namePh: 'Kick-off bingo',
       squaresLabel: 'Your 9 squares', squarePh: 'Square',
-      filled: function (n) { return n === 9 ? '✓ 9 of 9' : n + ' of 9'; },
+      filled: function (n, of) { return (n === of ? '✓ ' : '') + n + ' of ' + of; },
+      makeLeadFree: 'Write 8 things that might happen. Everyone gets the same 8, in their own order, around a free middle.',
+      squaresLabelFree: 'Your 8 squares',
+      freeLabel: 'Free square in the middle', freeHint: 'Already marked for everyone, so you write 8. Makes lines quicker to get.',
+      free: 'Free',
+      perPage: 'Cards per printed page', perPage2: '2 per page', perPage1: '1 per page',
+      perPageNote: function (n) { var two = Math.ceil(n / 2); return '2 per page: ' + two + (two === 1 ? ' sheet' : ' sheets') + ', cut along the dashed line. 1 per page: ' + n + ' sheets, bigger cards.'; },
       examplesLabel: 'Stuck? Start from an example and change it',
       examplesReplaced: 'Your squares were replaced.', undo: 'Undo',
       next: 'Next: cards and how to win',
-      needAll: function (n) { return 'Write ' + (9 - n) + ' more ' + (9 - n === 1 ? 'square' : 'squares') + ' to go on.'; },
+      needAll: function (n, of) { var m = of - n; return 'Write ' + m + ' more ' + (m === 1 ? 'square' : 'squares') + ' to go on.'; },
       needName: 'Give your bingo a name to go on.',
       nothingSaved: "Nothing is saved. Close the tab and it's gone.",
       openPdf: 'Open a bingo PDF', openPdfHint: 'Made one before? Open its PDF to get the squares back.',
@@ -52,7 +58,7 @@
       share: 'Share', shared: 'Shared', shareAgain: 'Again', saved: 'Saved',
       shareCard: function (i, n) { return 'Share card ' + i + ' of ' + n; },
       pdf: 'Download PDF to print', allPics: function (n) { return 'Save all ' + n + ' pictures'; },
-      shareFoot: 'Prefer screenshots? That works too. Keep the PDF: open it here again to make new cards from the same 9.',
+      shareFoot: 'Prefer screenshots? That works too. Keep the PDF: open it here again to make new cards from the same squares.',
       startOver: 'Start a new bingo',
       madeWith: 'Made by me, Ellen, with the help of AI. Free, no ads, nothing tracked.',
       source: 'Source code',
@@ -70,11 +76,17 @@
       makeLead: 'Skriv 9 saker som kan hända. Alla får samma 9, i sin egen ordning.',
       nameLabel: 'Döp din bingo', namePh: 'Kickoff-bingo',
       squaresLabel: 'Dina 9 rutor', squarePh: 'Ruta',
-      filled: function (n) { return n === 9 ? '✓ 9 av 9' : n + ' av 9'; },
+      filled: function (n, of) { return (n === of ? '✓ ' : '') + n + ' av ' + of; },
+      makeLeadFree: 'Skriv 8 saker som kan hända. Alla får samma 8, i sin egen ordning, runt en fri mitt.',
+      squaresLabelFree: 'Dina 8 rutor',
+      freeLabel: 'Fri ruta i mitten', freeHint: 'Redan markerad för alla, så du skriver 8. Gör det lättare att få rader.',
+      free: 'Fri',
+      perPage: 'Brickor per utskriven sida', perPage2: '2 per sida', perPage1: '1 per sida',
+      perPageNote: function (n) { var two = Math.ceil(n / 2); return '2 per sida: ' + two + (two === 1 ? ' ark' : ' ark') + ', klipp längs den streckade linjen. 1 per sida: ' + n + ' ark, större brickor.'; },
       examplesLabel: 'Kört fast? Börja från ett exempel och ändra',
       examplesReplaced: 'Dina rutor byttes ut.', undo: 'Ångra',
       next: 'Nästa: brickor och hur man vinner',
-      needAll: function (n) { return 'Skriv ' + (9 - n) + ' ' + (9 - n === 1 ? 'ruta' : 'rutor') + ' till för att gå vidare.'; },
+      needAll: function (n, of) { var m = of - n; return 'Skriv ' + m + ' ' + (m === 1 ? 'ruta' : 'rutor') + ' till för att gå vidare.'; },
       needName: 'Ge din bingo ett namn för att gå vidare.',
       nothingSaved: 'Inget sparas. Stäng fliken så är det borta.',
       openPdf: 'Öppna en bingo-PDF', openPdfHint: 'Gjort en förut? Öppna dess PDF så kommer rutorna tillbaka.',
@@ -102,7 +114,7 @@
       share: 'Dela', shared: 'Delad', shareAgain: 'Igen', saved: 'Sparad',
       shareCard: function (i, n) { return 'Dela bricka ' + i + ' av ' + n; },
       pdf: 'Ladda ner PDF för utskrift', allPics: function (n) { return 'Spara alla ' + n + ' bilder'; },
-      shareFoot: 'Hellre skärmdumpar? Det går också bra. Spara PDF:en: öppna den här igen för att göra nya brickor med samma 9.',
+      shareFoot: 'Hellre skärmdumpar? Det går också bra. Spara PDF:en: öppna den här igen för att göra nya brickor med samma rutor.',
       startOver: 'Gör en ny bingo',
       madeWith: 'Gjord av mig, Ellen, med hjälp av AI. Gratis, ingen reklam, ingen spårning.',
       source: 'Källkod',
@@ -126,6 +138,8 @@
     squares: ['', '', '', '', '', '', '', '', ''],
     count: 8,
     win: 'line',
+    free: false,      // free square in the middle (Ellen, 8 Nov 2026): off by default
+    perPage: 2,       // PDF: 2 cards per A4 (cut) or 1 per page
     cards: [],        // each card: an order of the 9 square indexes
     idx: 0,           // card shown in the preview
     sent: {},         // card number -> 'shared' | 'saved' (this visit only)
@@ -154,6 +168,7 @@
       else if (k === 'style') el.setAttribute('style', v);
       else if (k.slice(0, 2) === 'on') el.addEventListener(k.slice(2), v);
       else if (k === 'value') el.value = v;
+      else if (k === 'checked') el.checked = !!v;
       else if (v === true) el.setAttribute(k, '');
       else el.setAttribute(k, String(v));
     });
@@ -182,6 +197,22 @@
     s.innerHTML = ICONS[name];
     return s;
   }
+  function pageIcon(k) {
+    var s = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    s.setAttribute('width', 16); s.setAttribute('height', 22); s.setAttribute('viewBox', '0 0 16 22'); s.setAttribute('aria-hidden', 'true');
+    s.setAttribute('fill', 'none'); s.setAttribute('stroke', 'currentColor'); s.setAttribute('stroke-width', '1.6');
+    s.innerHTML = '<rect x="1" y="1" width="14" height="20" rx="1.5"/>' + (k === 2
+      ? '<rect x="4" y="3" width="8" height="7" rx="1"/><rect x="4" y="12" width="8" height="7" rx="1"/>'
+      : '<rect x="3" y="4" width="10" height="13" rx="1"/>');
+    return s;
+  }
+  function starIcon(size) {
+    var s = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    s.setAttribute('width', size); s.setAttribute('height', size); s.setAttribute('viewBox', '0 0 24 24'); s.setAttribute('aria-hidden', 'true');
+    s.innerHTML = '<path fill="currentColor" d="' + STAR + '"/>';
+    return s;
+  }
+  var STAR = 'M12 2.5l2.9 6.2 6.6.7-4.9 4.5 1.4 6.6L12 17.2 6 20.5l1.4-6.6L2.5 9.4l6.6-.7z';
   function clean(s, max) {
     return String(s == null ? '' : s).replace(/[\u0000-\u001f\u007f]/g, ' ').replace(/\s+/g, ' ').trim().slice(0, max);
   }
@@ -195,7 +226,10 @@
     if (!window.EllenialTheme) return null;
     return EllenialTheme.control({ label: t().theme, labels: t().themeLabels });
   }
-  function filledCount() { return state.squares.filter(function (s) { return clean(s, LIMITS.square); }).length; }
+  function needed() { return state.free ? 8 : 9; }
+  function filledCount() {
+    return state.squares.filter(function (s, i) { return !(state.free && i === 4) && clean(s, LIMITS.square); }).length;
+  }
   function go(view) { state.view = view; state.note = ''; render(true); }
   function render(top) {
     document.documentElement.lang = lang;
@@ -225,12 +259,14 @@
     do { crypto.getRandomValues(buf); } while (buf[0] >= lim);
     return buf[0] % n;
   }
+  // With a free middle, the 8 other squares are shuffled around it and position 4 always holds 4 (the free one).
   function perm() {
-    var a = [0, 1, 2, 3, 4, 5, 6, 7, 8];
-    for (var i = 8; i > 0; i--) { var j = randInt(i + 1), x = a[i]; a[i] = a[j]; a[j] = x; }
+    var a = state.free ? [0, 1, 2, 3, 5, 6, 7, 8] : [0, 1, 2, 3, 4, 5, 6, 7, 8];
+    for (var i = a.length - 1; i > 0; i--) { var j = randInt(i + 1), x = a[i]; a[i] = a[j]; a[j] = x; }
+    if (state.free) a.splice(4, 0, 4);
     return a;
   }
-  // n different orders of the same 9 squares (9! = 362 880 to pick from, so never a repeat).
+  // n different orders of the same squares (9! = 362 880, or 8! = 40 320 with a free middle: never a repeat).
   function shuffleCards(n) {
     var seen = {}, out = [];
     while (out.length < n) {
@@ -239,12 +275,15 @@
     }
     return out;
   }
-  function cardSquares(i) { return state.cards[i].map(function (k) { return clean(state.squares[k], LIMITS.square); }); }
+  var FREE = null;   // marks the free middle in a card's list of squares
+  function cardSquares(i) {
+    return state.cards[i].map(function (k, pos) { return state.free && pos === 4 ? FREE : clean(state.squares[k], LIMITS.square); });
+  }
 
   /* ---------------- view 1: write your 9 ---------------- */
 
   function viewWrite() {
-    var n = filledCount(), name = clean(state.title, LIMITS.title);
+    var of = needed();
     var nameInput = h('input', {
       id: 'bname', class: 'input', maxlength: LIMITS.title, autocomplete: 'off',
       placeholder: t().namePh, value: state.title,
@@ -259,20 +298,23 @@
     var hint = h('p', { class: 'note', style: 'text-align:center' });
     function update() {
       var c = filledCount(), nm = clean(state.title, LIMITS.title);
-      counter.textContent = t().filled(c);
-      counter.className = 'count' + (c === 9 ? ' done' : '');
-      nextBtn.disabled = !(c === 9 && nm);
-      hint.textContent = c < 9 ? t().needAll(c) : (!nm ? t().needName : '');
+      counter.textContent = t().filled(c, of);
+      counter.className = 'count' + (c === of ? ' done' : '');
+      nextBtn.disabled = !(c === of && nm);
+      hint.textContent = c < of ? t().needAll(c, of) : (!nm ? t().needName : '');
       hint.hidden = !hint.textContent;
     }
     var boxes = state.squares.map(function (s, i) {
+      if (state.free && i === 4) {
+        return h('div', { class: 'sq free', role: 'img', 'aria-label': t().freeLabel }, starIcon(24), h('span', { text: t().free }));
+      }
       return h('textarea', {
         id: 'sq' + i, class: 'sq', rows: 3, maxlength: LIMITS.square,
         'aria-label': t().squarePh + ' ' + (i + 1), placeholder: t().squarePh + ' ' + (i + 1),
         value: s,
         oninput: function (e) { state.squares[i] = e.target.value.replace(/\n/g, ' '); update(); },
         onkeydown: function (e) {
-          if (e.key === 'Enter') { e.preventDefault(); var nx = document.getElementById('sq' + (i + 1)); (nx || nextBtn).focus(); }
+          if (e.key === 'Enter') { e.preventDefault(); var nx = document.getElementById('sq' + (i + 1)) || document.getElementById('sq' + (i + 2)); (nx || nextBtn).focus(); }
         }
       });
     });
@@ -283,12 +325,15 @@
       topBar(null),
       h('div', { class: 'stack', style: 'gap:6px' },
         h('h1', { class: 'q', text: t().makeTitle }),
-        h('p', { class: 'lead', text: t().makeLead })),
+        h('p', { class: 'lead', text: state.free ? t().makeLeadFree : t().makeLead })),
       state.note ? h('p', { class: 'toast', role: 'status', text: state.note }) : null,
       h('label', { class: 'field', for: 'bname' }, h('span', { text: t().nameLabel }), nameInput),
+      h('label', { class: 'check' + (state.free ? ' on' : '') },
+        h('input', { id: 'free', type: 'checkbox', checked: state.free, onchange: function (e) { state.free = e.target.checked; render(); } }),
+        h('span', null, h('strong', { text: t().freeLabel }), h('small', { text: t().freeHint }))),
       h('div', { class: 'stack', style: 'gap:8px' },
-        h('div', { class: 'row-between' }, h('span', { style: 'font-size:14px;font-weight:700', text: t().squaresLabel }), counter),
-        h('div', { class: 'grid9', role: 'group', 'aria-label': t().squaresLabel }, boxes)),
+        h('div', { class: 'row-between' }, h('span', { style: 'font-size:14px;font-weight:700', text: state.free ? t().squaresLabelFree : t().squaresLabel }), counter),
+        h('div', { class: 'grid9', role: 'group', 'aria-label': state.free ? t().squaresLabelFree : t().squaresLabel }, boxes)),
       h('div', { class: 'stack', style: 'gap:8px' },
         h('span', { class: 'note', text: t().examplesLabel }),
         h('div', { class: 'chips' }, t().examples.map(function (ex) {
@@ -368,7 +413,9 @@
       h('div', { class: 'bingo-head' },
         h('span', { class: 'bingo-title', text: state.title }),
         h('span', { class: 'card-no', text: t().cardOf(i + 1, n) })),
-      h('div', { class: 'cells' }, cardSquares(i).map(function (s) { return h('div', { class: 'cell', text: s }); })),
+      h('div', { class: 'cells' }, cardSquares(i).map(function (s) {
+        return s === FREE ? h('div', { class: 'cell free' }, starIcon(20), h('span', { text: t().free })) : h('div', { class: 'cell', text: s });
+      })),
       h('span', { class: 'note', text: t().winRule[state.win] }));
     var x0 = null;
     card.addEventListener('touchstart', function (e) { x0 = e.touches[0].clientX; }, { passive: true });
@@ -420,12 +467,19 @@
       h('div', { class: 'cards-list' }, rows),
       state.note ? h('p', { class: 'toast', role: 'status', text: state.note }) : null,
       h('div', { class: 'grow' }),
+      h('section', { class: 'panel', style: 'gap:10px' },
+        h('span', { id: 'perpage', style: 'font-size:14px;font-weight:700', text: t().perPage }),
+        h('div', { class: 'seg two', role: 'group', 'aria-labelledby': 'perpage' }, [2, 1].map(function (k) {
+          return h('button', { id: 'pp' + k, 'aria-pressed': String(state.perPage === k), onclick: function () { state.perPage = k; render(); } },
+            pageIcon(k), k === 2 ? t().perPage2 : t().perPage1);
+        })),
+        h('p', { class: 'note', text: t().perPageNote(n) })),
       h('div', { class: 'stack' },
         h('button', { id: 'pdf', class: 'btn', onclick: downloadPdf }, icon('save'), t().pdf),
         h('button', { id: 'allpics', class: 'btn ghost', onclick: saveAll }, t().allPics(n))),
       h('p', { class: 'note', text: t().shareFoot }),
       h('button', { class: 'btn link', style: 'align-self:center', onclick: function () {
-        state.title = ''; state.squares = ['', '', '', '', '', '', '', '', '']; state.cards = []; state.sent = {}; state.undo = null;
+        state.title = ''; state.squares = ['', '', '', '', '', '', '', '', '']; state.cards = []; state.sent = {}; state.undo = null; state.free = false;
         go('write');
       } }, t().startOver));
   }
@@ -433,9 +487,9 @@
   /* ---------------- the card picture (canvas) ---------------- */
 
   // Always the light palette: it reads well in any chat and prints cleanly.
-  var PAL_SCREEN = { ground: '#FEF2E2', surface: '#FFFBF5', ink: '#1F1A2E', muted: '#575166', accent: '#342E86', onAccent: '#FFFBF5' };
+  var PAL_SCREEN = { ground: '#FEF2E2', surface: '#FFFBF5', ink: '#1F1A2E', muted: '#575166', accent: '#342E86', onAccent: '#FFFBF5', free: '#B7B1E6' };
   // The PDF prints on white to save ink (Ellen, 8 Nov 2026); the indigo lines and number stay.
-  var PAL_PRINT = { ground: '#FFFFFF', surface: '#FFFFFF', ink: '#1F1A2E', muted: '#575166', accent: '#342E86', onAccent: '#FFFFFF' };
+  var PAL_PRINT = { ground: '#FFFFFF', surface: '#FFFFFF', ink: '#1F1A2E', muted: '#575166', accent: '#342E86', onAccent: '#FFFFFF', free: '#E4E1F6' };
   var PAL = PAL_SCREEN;
   var W = 1080, H = 1350;   // 4:5, the shape chat apps show without cropping
   var DISPLAY = 'Fraunces, Georgia, serif', SANS = '"DM Sans", system-ui, sans-serif';
@@ -506,8 +560,16 @@
     ctx.textAlign = 'center';
     sq.forEach(function (s, k) {
       var x = pad + (k % 3) * (cell + gap), y = gy + Math.floor(k / 3) * (cell + gap);
-      roundRect(ctx, x, y, cell, cell, 24); ctx.fillStyle = PAL.surface; ctx.fill();
+      roundRect(ctx, x, y, cell, cell, 24); ctx.fillStyle = s === FREE ? PAL.free : PAL.surface; ctx.fill();
       ctx.lineWidth = 5; ctx.strokeStyle = PAL.accent; ctx.stroke();
+      if (s === FREE) {
+        // A star and the word, so it never relies on colour alone.
+        ctx.save(); ctx.translate(x + cell / 2 - 48, y + cell / 2 - 92); ctx.scale(4, 4);
+        ctx.fillStyle = PAL.accent; ctx.fill(new Path2D(STAR)); ctx.restore();
+        ctx.fillStyle = PAL.ink; ctx.font = '700 44px ' + SANS;
+        ctx.fillText(t().free, x + cell / 2, y + cell / 2 + 64);
+        return;
+      }
       var f = fitText(ctx, s, '500 {s}px ' + SANS, inner, inner, 46, 24);
       ctx.fillStyle = PAL.ink; ctx.font = '500 ' + f.size + 'px ' + SANS;
       var top = y + (cell - f.lines.length * f.lh) / 2 + f.lh * 0.78;
@@ -599,16 +661,17 @@
   function buildPdf(images) {
     var enc = new TextEncoder(), parts = [], len = 0, offsets = [];
     function push(x) { var b = typeof x === 'string' ? enc.encode(x) : x; parts.push(b); len += b.length; }
-    var payload = b64u(JSON.stringify({ v: 1, title: state.title, squares: state.squares, count: state.cards.length, win: state.win, cards: state.cards.map(function (c) { return c.join(''); }), lang: lang }));
+    var payload = b64u(JSON.stringify({ v: 1, title: state.title, squares: state.squares, count: state.cards.length, win: state.win, free: state.free, perPage: state.perPage, cards: state.cards.map(function (c) { return c.join(''); }), lang: lang }));
     push('%PDF-1.4\n%\xe2\xe3\xcf\xd3\n'.replace(/[\x80-\xff]/g, '~'));
     push(PDF_MARK + payload + '\n');
-    var pw = 595.28, ph = 841.89, cardH = 380, cardW = cardH * W / H, x = (pw - cardW) / 2;
-    var pages = Math.ceil(images.length / 2), objs = [];
+    var per = state.perPage === 1 ? 1 : 2;
+    var pw = 595.28, ph = 841.89, cardH = per === 1 ? 640 : 380, cardW = cardH * W / H, x = (pw - cardW) / 2;
+    var pages = Math.ceil(images.length / per);
     // object numbers: 1 catalog, 2 pages, 3 info, then per page: page, content, img1, img2?
     var next = 4, pageIds = [], pageObjs = [];
     for (var p = 0; p < pages; p++) {
       var ids = { page: next++, content: next++, imgs: [] };
-      for (var q = 0; q < 2 && p * 2 + q < images.length; q++) ids.imgs.push({ id: next++, data: images[p * 2 + q] });
+      for (var q = 0; q < per && p * per + q < images.length; q++) ids.imgs.push({ id: next++, data: images[p * per + q] });
       pageIds.push(ids.page); pageObjs.push(ids);
     }
     function obj(id, body) { offsets[id] = len; push(id + ' 0 obj\n'); if (typeof body === 'string') push(body); else body(); push('\nendobj\n'); }
@@ -620,7 +683,7 @@
       obj(ids.page, '<< /Type /Page /Parent 2 0 R /MediaBox [0 0 ' + pw + ' ' + ph + '] /Resources << /XObject << ' + xo + ' >> >> /Contents ' + ids.content + ' 0 R >>');
       var s = '';
       ids.imgs.forEach(function (im, k) {
-        var y = k === 0 ? ph - 30 - cardH : 30;
+        var y = per === 1 ? (ph - cardH) / 2 : (k === 0 ? ph - 30 - cardH : 30);
         s += 'q ' + cardW.toFixed(2) + ' 0 0 ' + cardH + ' ' + x.toFixed(2) + ' ' + y.toFixed(2) + ' cm /C' + k + ' Do Q\n';
       });
       if (ids.imgs.length === 2) s += 'q 0.6 0.6 0.6 RG 0.75 w [6 4] 0 d 40 ' + (ph / 2).toFixed(2) + ' m ' + (pw - 40).toFixed(2) + ' ' + (ph / 2).toFixed(2) + ' l S Q\n';
@@ -654,7 +717,7 @@
       var m = s.match(/%EllenialBingo:([A-Za-z0-9_-]{10,20000})/);
       var b = m && parseBingo(m[1]);
       if (!b) { state.note = t().openBad; render(); return; }
-      state.title = b.title; state.squares = b.squares; state.count = b.count; state.win = b.win;
+      state.title = b.title; state.squares = b.squares; state.count = b.count; state.win = b.win; state.free = b.free; state.perPage = b.perPage;
       state.cards = b.cards; state.idx = 0; state.sent = {}; state.undo = null;
       if (b.lang && b.lang !== lang) { lang = b.lang; }
       go('preview');
@@ -665,15 +728,15 @@
       var d = JSON.parse(fromB64u(p));
       if (!d || d.v !== 1 || typeof d.title !== 'string' || !Array.isArray(d.squares) || d.squares.length !== 9) return null;
       var squares = d.squares.map(function (x) { return clean(x, LIMITS.square); });
-      var title = clean(d.title, LIMITS.title);
-      if (!title || squares.some(function (x) { return !x; })) return null;
+      var title = clean(d.title, LIMITS.title), free = d.free === true;
+      if (!title || squares.some(function (x, i) { return !x && !(free && i === 4); })) return null;
       var win = ['line', 'two', 'full'].indexOf(d.win) >= 0 ? d.win : 'line';
       var cards = Array.isArray(d.cards) ? d.cards.filter(function (c) {
-        return typeof c === 'string' && /^[0-8]{9}$/.test(c) && new Set(c.split('')).size === 9;
+        return typeof c === 'string' && /^[0-8]{9}$/.test(c) && new Set(c.split('')).size === 9 && (!free || c[4] === '4');
       }).slice(0, LIMITS.maxCards).map(function (c) { return c.split('').map(Number); }) : [];
       var count = Math.max(LIMITS.minCards, Math.min(LIMITS.maxCards, cards.length || parseInt(d.count, 10) || 8));
-      if (cards.length < LIMITS.minCards) cards = shuffleCards(count);
-      return { title: title, squares: squares, count: cards.length, win: win, cards: cards, lang: d.lang === 'sv' || d.lang === 'en' ? d.lang : null };
+      if (cards.length < LIMITS.minCards) { var was = state.free; state.free = free; cards = shuffleCards(count); state.free = was; }
+      return { title: title, squares: squares, count: cards.length, win: win, cards: cards, free: free, perPage: d.perPage === 1 ? 1 : 2, lang: d.lang === 'sv' || d.lang === 'en' ? d.lang : null };
     } catch (e) { return null; }
   }
 

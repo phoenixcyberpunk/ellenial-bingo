@@ -13,12 +13,15 @@ Read this first in every session. Social bingo maker under **Ellenial**, English
 - Exactly 9 squares, one 3×3 template. Everyone gets the same 9, scrambled: that's the point, and one person only has to come up with 9.
 - The creator chooses how many cards (2–30) and how to win (one line, two lines, full card). Every card is numbered.
 - Pictures (one per player, share sheet) and a PDF to print. Screenshots are mentioned as fine too.
+- (8 Nov) Free square in the middle: an option, OFF by default (on 3×3 the centre is on 4 of 8 lines, so a line can need only 2 squares; the hint says so). With it on you write 8; the 8 are shuffled around the centre.
+- (8 Nov) PDF: the creator picks 2 cards per page (default, cut line) or 1 per page (bigger, centred).
 - Solo only for now; "fill together" via a live room is a later idea (would reuse `ellenial-room.js` from poll).
 
 ## Build notes (8 Nov 2026)
 - Picture: canvas 1080×1350, always the light palette. `fitText` tries every size without splitting words first, then allows splits.
 - PDF: hand-written, A4, 2 cards per page, JPEG images, white print palette (`PAL_PRINT`); pictures use `PAL_SCREEN` (peach). Payload line `%EllenialBingo:` + base64url JSON `{v:1,title,squares,count,win,cards:["031…"],lang}`. `openPdf` reads only the first 64 KB, then `parseBingo` validates everything (lengths, 9 non-empty squares, card strings `^[0-8]{9}$` with 9 distinct digits).
 - Squares max 80 characters, title max 40.
+- Free middle: `state.free`; a card is still 9 digits with `4` fixed at position 4, and `squares[4]` is ignored (kept, so switching off brings it back). Payload adds `free` and `perPage`; `parseBingo` rejects free cards without `4` in the middle. PDFs from before 8 Nov (no `free`) still open.
 
 ## Testing
 - 8 Nov 2026, Playwright at 390×844, dark and light, English and Swedish: all four screens, 10 unique cards, two-lines rule, PDF made (5 pages for 10 cards) and reopened to the same cards and rule, a non-bingo PDF gives a friendly note, long Swedish squares and a 39-letter word fit the picture. No console errors.
@@ -36,3 +39,4 @@ Read this first in every session. Social bingo maker under **Ellenial**, English
 
 ## Status
 - 2026-11-08: v1 built and tested, white print PDF added. Repo created by Ellen, pushed to `main`. Vercel project `ellenial-bingo` (`prj_JnerObNvPb2DWbh15ddOBmDajoAz`) created, linked to the repo (auto-deploys from `main`), domain bingo.ellenial.app verified. First production deploy READY; headers (CSP, HSTS, noindex) confirmed live. Not listed on ellenial.app yet. Next: Ellen's real-phone test of sharing.
+- 2026-11-08 evening: Ellen tested on her phone: sharing and reopening the PDF work perfectly. Added the free middle square and the 2-or-1 per page PDF choice (mock-up screens 6–8 approved). Tested in Playwright: 8 unique cards with the centre always free, Next needs 8 (free) or 9, 1 per page = 8 pages and 2 per page = 4 pages for 8 cards, reopen keeps free, layout and cards, an old PDF still opens, no errors. Also removed auto-hyphenation in the preview grid.

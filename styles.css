@@ -152,7 +152,7 @@ h1.q.small { font-size: 26px; line-height: 1.2; }
 .cell {
   aspect-ratio: 1; display: flex; align-items: center; justify-content: center; text-align: center;
   padding: 6px; border-radius: 10px; border: 2px solid var(--accent);
-  font-size: 13px; line-height: 1.25; font-weight: 500; overflow-wrap: anywhere; hyphens: auto;
+  font-size: 13px; line-height: 1.25; font-weight: 500; overflow-wrap: break-word;
 }
 .pager { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
 .pager .round { margin: 0; border-radius: 999px; border: 2px solid var(--accent); color: var(--accent); }
@@ -169,3 +169,19 @@ h1.q.small { font-size: 26px; line-height: 1.2; }
 .share-btn { min-height: 44px; padding: 0 16px; border-radius: 999px; border: 2px solid var(--accent); background: transparent; color: var(--accent); font-size: 14px; font-weight: 700; display: inline-flex; align-items: center; gap: 6px; }
 .share-btn.again { border-color: transparent; color: var(--muted); font-weight: 500; }
 .toast { margin: 0; padding: 10px 14px; border-radius: 14px; background: var(--soft); font-size: 14px; }
+
+/* free middle + PDF layout (8 Nov 2026) */
+.sq.free, .cell.free { background: var(--peri); color: var(--on-peri); border: 2px solid var(--accent); flex-direction: column; justify-content: center; gap: 2px; font-weight: 700; }
+.sq.free svg, .cell.free svg { color: var(--accent); }
+:root[data-theme="dark"] .sq.free svg, :root[data-theme="dark"] .cell.free svg { color: var(--on-peri); }
+.check strong { display: block; font-size: 15px; }
+.check small { display: block; font-size: 13px; color: var(--muted); font-weight: 400; }
+.check { display: flex; align-items: center; gap: 12px; min-height: 60px; padding: 10px 16px; border-radius: 16px; background: var(--surface); border: 2px solid var(--edge); cursor: pointer; }
+.check input { width: 22px; height: 22px; margin: 0; accent-color: var(--accent); flex: none; }
+.check > span { flex: 1; }
+.check.on { border-color: var(--accent); }
+.seg.two { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.seg.two button { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 48px; }
+.seg { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px; padding: 4px; border-radius: 14px; background: var(--surface); border: 2px solid var(--edge); }
+.seg button { min-height: 44px; border: 0; border-radius: 10px; background: transparent; color: var(--ink); font-size: 15px; font-weight: 500; padding: 0 6px; }
+.seg button[aria-pressed="true"] { background: var(--accent); color: var(--on-accent); font-weight: 700; }
