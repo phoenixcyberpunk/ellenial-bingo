@@ -12,7 +12,9 @@
  *    and the script before the app's script (defer is fine).
  * 3. Put the button in the top-right corner of the top bar:
  *      EllenialHelp.button({ label: 'How it works', onclick: function () { EllenialHelp.open(HELP) } })
- *    where HELP = { title, lead, image, steps: [{ title, text }], note, done, close }.
+ *    where HELP = { title, lead, image, steps: [{ title, text }], note, more, done, close }.
+ *    `more` is optional: { label, onclick } adds a link under the note for apps with a longer page
+ *    (Poll's privacy page, for example). The sheet closes before onclick runs.
  *    `image` is optional (a drawing of Ellen's, e.g. the app's own icon drawing, shown without alt text
  *    because it only decorates). Keep steps to three; plain words, first person where it fits.
  * 4. Test: the sheet must open, close with "Got it", the ✕, Esc or a tap outside, and give the
@@ -75,6 +77,11 @@
     })
     d.appendChild(ol)
     if (h.note) d.appendChild(el('p', 'eh-note', h.note))
+    if (h.more && h.more.label) {
+      var more = el('button', 'eh-more', h.more.label); more.type = 'button'
+      more.addEventListener('click', function () { close(); if (h.more.onclick) h.more.onclick() })
+      d.appendChild(more)
+    }
     var ok = el('button', 'eh-ok', h.done || 'Got it'); ok.type = 'button'
     d.appendChild(ok)
 

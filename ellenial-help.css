@@ -57,3 +57,7 @@
   min-height: 56px; border: 0; border-radius: 16px; cursor: pointer;
   background: var(--accent); color: var(--on-accent); font: inherit; font-size: 17px; font-weight: 700;
 }
+.eh-more {
+  align-self: flex-start; min-height: 44px; padding: 0; border: 0; background: transparent; cursor: pointer;
+  color: var(--accent); font: inherit; font-size: 15px; font-weight: 500; text-decoration: underline;
+}
