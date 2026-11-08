@@ -33,3 +33,6 @@ Read this first in every session. Social bingo maker under **Ellenial**, English
 ## Brand
 - Final Ellenial brand: same tokens, fonts and theme switch as poll and quiz. Theme key `eb:theme-pref`. Test with `?theme=light|dark`. Copy in first person ("I").
 - Accessibility: text ≥ 4.5:1, controls ≥ 3:1, never colour alone (✓ on the chosen win rule, "✓ Shared" with the word).
+
+## Status
+- 2026-11-08: v1 built and tested, white print PDF added. Repo created by Ellen, pushed to `main`. Vercel project `ellenial-bingo` (`prj_JnerObNvPb2DWbh15ddOBmDajoAz`) created, linked to the repo (auto-deploys from `main`), domain bingo.ellenial.app verified. First production deploy READY; headers (CSP, HSTS, noindex) confirmed live. Not listed on ellenial.app yet. Next: Ellen's real-phone test of sharing.
