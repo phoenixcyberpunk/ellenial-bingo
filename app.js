@@ -733,7 +733,8 @@
       var win = ['line', 'two', 'full'].indexOf(d.win) >= 0 ? d.win : 'line';
       var cards = Array.isArray(d.cards) ? d.cards.filter(function (c) {
         return typeof c === 'string' && /^[0-8]{9}$/.test(c) && new Set(c.split('')).size === 9 && (!free || c[4] === '4');
-      }).slice(0, LIMITS.maxCards).map(function (c) { return c.split('').map(Number); }) : [];
+      }).filter(function (c, i, all) { return all.indexOf(c) === i; })   // never two cards the same
+        .slice(0, LIMITS.maxCards).map(function (c) { return c.split('').map(Number); }) : [];
       var count = Math.max(LIMITS.minCards, Math.min(LIMITS.maxCards, cards.length || parseInt(d.count, 10) || 8));
       if (cards.length < LIMITS.minCards) { var was = state.free; state.free = free; cards = shuffleCards(count); state.free = was; }
       return { title: title, squares: squares, count: cards.length, win: win, cards: cards, free: free, perPage: d.perPage === 1 ? 1 : 2, lang: d.lang === 'sv' || d.lang === 'en' ? d.lang : null };

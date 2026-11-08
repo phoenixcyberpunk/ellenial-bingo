@@ -27,6 +27,12 @@ Read this first in every session. Social bingo maker under **Ellenial**, English
 - 8 Nov 2026, Playwright at 390×844, dark and light, English and Swedish: all four screens, 10 unique cards, two-lines rule, PDF made (5 pages for 10 cards) and reopened to the same cards and rule, a non-bingo PDF gives a friendly note, long Swedish squares and a 39-letter word fit the picture. No console errors.
 - Not testable here: the real share sheet on iPhone/Android. Ellen tests that on her phone.
 
+## Ship check (8 Nov 2026, against Public)
+- Repo history clean (no keys or personal data; commits as Claude <noreply@anthropic.com>); AGPL-3.0; innerHTML only on constant SVG.
+- Crafted-PDF fuzz (HTML in fields, 5 000-char text, bad/duplicate/500 cards, wrong types, `__proto__`, wrong version, payload past 64 KB, garbage, empty, bad base64/JSON): all rejected or cleaned, no injection, no errors. Fix: duplicate cards in a PDF are now dropped.
+- axe-core (WCAG 2.1 AA + best practice): 0 violations on all 4 screens, light and dark, phone and desktop. Canvas/PDF colour pairs ≥ 5.6:1. Keyboard order follows the page.
+- Passes Alpha (and Beta once fonts are credited). Public blocked by: Ellen's app icon + manifest, the shared "how it works in 3 steps" onboarding gate, `bingo` in credits.json for Fraunces, DM Sans and Fontsource, and the library card (her description). Cost receipt: nothing to add (static, inside "hosting now $0").
+
 ## Open
 - App icon (Ellen's own art, per the Ellenial icon template) and manifest.
 - List on ellenial.app when Ellen decides (alpha).
