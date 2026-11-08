@@ -59,7 +59,7 @@
       pdf: 'Download PDF to print', allPics: function (n) { return 'Save all ' + n + ' pictures'; },
       shareFoot: 'Prefer screenshots? That works too. Keep the PDF: open it here again to make new cards from the same squares.',
       startOver: 'Start a new bingo',
-      madeWith: 'Drawn and designed by me, Ellen, coded with the help of AI. Free, no ads, nothing tracked.',
+      drawn: 'Drawn', madeWith: ' and designed by me, Ellen, coded with the help of AI. Free, no ads, nothing tracked.',
       source: 'Source code',
       madeIn: 'Created in bingo.ellenial.app · Free, no ads, no trackers. Bingo!',
       help: {
@@ -125,7 +125,7 @@
       pdf: 'Ladda ner PDF för utskrift', allPics: function (n) { return 'Spara alla ' + n + ' bilder'; },
       shareFoot: 'Hellre skärmdumpar? Det går också bra. Spara PDF:en: öppna den här igen för att göra nya brickor med samma rutor.',
       startOver: 'Gör en ny bingo',
-      madeWith: 'Ritat och designat av mig, Ellen, kodat med hjälp av AI. Gratis, ingen reklam, ingen spårning.',
+      drawn: 'Ritat', madeWith: ' och designat av mig, Ellen, kodat med hjälp av AI. Gratis, ingen reklam, ingen spårning.',
       source: 'Källkod',
       madeIn: 'Skapad i bingo.ellenial.app · Gratis, ingen reklam, inga spårare. Bingo!',
       help: {
@@ -392,7 +392,7 @@
     return h('div', { class: 'theme-row' },
       themeSwitch(),
       h('p', { class: 'foot', style: 'margin:0', text: t().nothingSaved }),
-      h('p', { class: 'foot', style: 'margin:0' }, t().madeWith, ' ',
+      h('p', { class: 'foot', style: 'margin:0' }, h('a', { href: 'https://ellenial.app/drawings', text: t().drawn }), t().madeWith, ' ',
         h('a', { href: 'https://ellenial.app', text: 'ellenial.app' }), ' · ',
         h('a', { href: 'https://github.com/phoenixcyberpunk/ellenial-bingo', text: t().source })));
   }
