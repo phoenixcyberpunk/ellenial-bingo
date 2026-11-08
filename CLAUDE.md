@@ -21,6 +21,7 @@ Read this first in every session. Social bingo maker under **Ellenial**, English
 - Picture: canvas 1080×1350, always the light palette. `fitText` tries every size without splitting words first, then allows splits.
 - PDF: hand-written, A4, 2 cards per page, JPEG images, white print palette (`PAL_PRINT`); pictures use `PAL_SCREEN` (peach). Payload line `%EllenialBingo:` + base64url JSON `{v:1,title,squares,count,win,cards:["031…"],lang}`. `openPdf` reads only the first 64 KB, then `parseBingo` validates everything (lengths, 9 non-empty squares, card strings `^[0-8]{9}$` with 9 distinct digits).
 - Squares max 80 characters, title max 40.
+- PDF cards = the drawn picture + an invisible Helvetica text layer (render mode 3, stretched with Tz to each drawn line), so the PDF can be searched, copied and read aloud (Ellen chose this, 8 Nov; same as Quiz).
 - Free middle: `state.free`; a card is still 9 digits with `4` fixed at position 4, and `squares[4]` is ignored (kept, so switching off brings it back). Payload adds `free` and `perPage`; `parseBingo` rejects free cards without `4` in the middle. PDFs from before 8 Nov (no `free`) still open.
 
 ## Testing

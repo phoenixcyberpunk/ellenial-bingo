@@ -564,7 +564,40 @@
     var l2 = wrapLines(ctx, text, maxW), lhs = Math.round(small * 1.22), fit = Math.max(1, Math.floor(maxH / lhs));
     return { size: small, lines: l2.slice(0, fit), lh: lhs };
   }
+  // The hidden text layer (Ellen, 8 Nov 2026): each card is the drawn picture plus the same words as
+  // invisible text on top, so the PDF can be searched, copied and read aloud. Built-in Helvetica,
+  // stretched to the width of each drawn line so a selection lands on the words. Same as ellenial quiz.
+  function textRun(c, text, left, y, size) {
+    var font = c.font, vis = c.measureText(text).width;
+    c.font = size + 'px Helvetica, Arial, sans-serif';
+    var hw = c.measureText(text).width || 1;
+    c.font = font;
+    return { text: text, x: left, y: y, size: size, scale: vis / hw };
+  }
+  function runAt(c, runs, text, x, y, size) {
+    var w = c.measureText(text).width, a = c.textAlign;
+    runs.push(textRun(c, text, a === 'center' ? x - w / 2 : a === 'right' ? x - w : x, y, size));
+  }
+  var WIN = { 0x2013: 0x96, 0x2014: 0x97, 0x2018: 0x91, 0x2019: 0x92, 0x201C: 0x93, 0x201D: 0x94, 0x2026: 0x85, 0x20AC: 0x80, 0x2022: 0x95 };
+  function winAnsiHex(t) {
+    var out = '';
+    for (var i = 0; i < t.length; i++) {
+      var cp = t.charCodeAt(i), b = cp < 0x80 || (cp >= 0xA0 && cp <= 0xFF) ? cp : WIN[cp] || 0x3F;
+      out += (b < 16 ? '0' : '') + b.toString(16);
+    }
+    return '<' + out + '>';
+  }
+  function textLayer(runs, cw, ch, ox, oy, w, h) {
+    var k = w / cw, s = 'BT 3 Tr\n';
+    runs.forEach(function (r) {
+      if (!r.text) return;
+      s += '/F1 ' + (r.size * k).toFixed(2) + ' Tf ' + Math.max(1, Math.min(400, r.scale * 100)).toFixed(1) + ' Tz 1 0 0 1 ' +
+        (ox + r.x * k).toFixed(2) + ' ' + (oy + h - r.y * (h / ch)).toFixed(2) + ' Tm ' + winAnsiHex(r.text) + ' Tj\n';
+    });
+    return s + 'ET\n';
+  }
   function drawCard(i, forPrint) {
+    var runs = [];
     PAL = forPrint ? PAL_PRINT : PAL_SCREEN;
     var cv = document.createElement('canvas'); cv.width = W; cv.height = H;
     var ctx = cv.getContext('2d'), pad = 60, n = state.cards.length;
@@ -577,12 +610,13 @@
     var cw = ctx.measureText(label).width + 56, chH = 64;
     roundRect(ctx, W - pad - cw, pad + 8, cw, chH, 32); ctx.fillStyle = PAL.accent; ctx.fill();
     ctx.fillStyle = PAL.onAccent; ctx.textAlign = 'center'; ctx.fillText(label, W - pad - cw / 2, pad + 8 + 45);
+    runAt(ctx, runs, label, W - pad - cw / 2, pad + 8 + 45, 36);
 
     // Title, top left (shrinks, then wraps to two lines)
     var tw = W - pad * 2 - cw - 28, title = fitText(ctx, state.title, '600 {s}px ' + DISPLAY, tw, 132, 76, 40);
     ctx.fillStyle = PAL.ink; ctx.textAlign = 'left'; ctx.font = '600 ' + title.size + 'px ' + DISPLAY;
     var ty = pad + (title.lines.length === 1 ? 62 : title.lh - 6);
-    title.lines.slice(0, 2).forEach(function (l, k) { ctx.fillText(l, pad, ty + k * title.lh); });
+    title.lines.slice(0, 2).forEach(function (l, k) { ctx.fillText(l, pad, ty + k * title.lh); runAt(ctx, runs, l, pad, ty + k * title.lh, title.size); });
 
     // The 3 x 3 grid
     var gy = 220, gap = 20, cell = (W - pad * 2 - gap * 2) / 3, inner = cell - 48, sq = cardSquares(i);
@@ -597,12 +631,13 @@
         ctx.fillStyle = PAL.accent; ctx.fill(new Path2D(STAR)); ctx.restore();
         ctx.fillStyle = PAL.ink; ctx.font = '700 44px ' + SANS;
         ctx.fillText(t().free, x + cell / 2, y + cell / 2 + 64);
+        runAt(ctx, runs, t().free, x + cell / 2, y + cell / 2 + 64, 44);
         return;
       }
       var f = fitText(ctx, s, '500 {s}px ' + SANS, inner, inner, 46, 24);
       ctx.fillStyle = PAL.ink; ctx.font = '500 ' + f.size + 'px ' + SANS;
       var top = y + (cell - f.lines.length * f.lh) / 2 + f.lh * 0.78;
-      f.lines.forEach(function (l, j) { ctx.fillText(l, x + cell / 2, top + j * f.lh); });
+      f.lines.forEach(function (l, j) { ctx.fillText(l, x + cell / 2, top + j * f.lh); runAt(ctx, runs, l, x + cell / 2, top + j * f.lh, f.size); });
     });
 
     // Win rule and address
@@ -611,9 +646,12 @@
     var rule = fitText(ctx, t().winRule[state.win], '500 {s}px ' + SANS, W - pad * 2, 50, 38, 26);
     ctx.fillStyle = PAL.ink; ctx.font = '500 ' + rule.size + 'px ' + SANS;
     ctx.fillText(rule.lines[0], pad, below + 70);
+    runAt(ctx, runs, rule.lines[0], pad, below + 70, rule.size);
     var made = fitText(ctx, t().madeIn, '400 {s}px ' + SANS, W - pad * 2, 40, 30, 22);
     ctx.fillStyle = PAL.muted; ctx.font = '400 ' + made.size + 'px ' + SANS;
     ctx.fillText(made.lines[0], pad, H - pad + 6);
+    runAt(ctx, runs, made.lines[0], pad, H - pad + 6, made.size);
+    cv.runs = runs;
     return cv;
   }
   function cardBlob(i) {
@@ -697,24 +735,26 @@
     var per = state.perPage === 1 ? 1 : 2;
     var pw = 595.28, ph = 841.89, cardH = per === 1 ? 640 : 380, cardW = cardH * W / H, x = (pw - cardW) / 2;
     var pages = Math.ceil(images.length / per);
-    // object numbers: 1 catalog, 2 pages, 3 info, then per page: page, content, img1, img2?
-    var next = 4, pageIds = [], pageObjs = [];
+    // object numbers: 1 catalog, 2 pages, 3 info, 4 font (for the hidden text), then per page: page, content, img1, img2?
+    var next = 5, pageIds = [], pageObjs = [];
     for (var p = 0; p < pages; p++) {
       var ids = { page: next++, content: next++, imgs: [] };
-      for (var q = 0; q < per && p * per + q < images.length; q++) ids.imgs.push({ id: next++, data: images[p * per + q] });
+      for (var q = 0; q < per && p * per + q < images.length; q++) ids.imgs.push({ id: next++, data: images[p * per + q].jpeg, runs: images[p * per + q].runs });
       pageIds.push(ids.page); pageObjs.push(ids);
     }
     function obj(id, body) { offsets[id] = len; push(id + ' 0 obj\n'); if (typeof body === 'string') push(body); else body(); push('\nendobj\n'); }
     obj(1, '<< /Type /Catalog /Pages 2 0 R >>');
     obj(2, '<< /Type /Pages /Count ' + pages + ' /Kids [' + pageIds.map(function (id) { return id + ' 0 R'; }).join(' ') + '] >>');
     obj(3, '<< /Title ' + pdfString(state.title) + ' /Producer (ellenial bingo, bingo.ellenial.app) /Creator (ellenial bingo) >>');
+    obj(4, '<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica /Encoding /WinAnsiEncoding >>');
     pageObjs.forEach(function (ids) {
       var xo = ids.imgs.map(function (im, k) { return '/C' + k + ' ' + im.id + ' 0 R'; }).join(' ');
-      obj(ids.page, '<< /Type /Page /Parent 2 0 R /MediaBox [0 0 ' + pw + ' ' + ph + '] /Resources << /XObject << ' + xo + ' >> >> /Contents ' + ids.content + ' 0 R >>');
+      obj(ids.page, '<< /Type /Page /Parent 2 0 R /MediaBox [0 0 ' + pw + ' ' + ph + '] /Resources << /XObject << ' + xo + ' >> /Font << /F1 4 0 R >> >> /Contents ' + ids.content + ' 0 R >>');
       var s = '';
       ids.imgs.forEach(function (im, k) {
         var y = per === 1 ? (ph - cardH) / 2 : (k === 0 ? ph - 30 - cardH : 30);
         s += 'q ' + cardW.toFixed(2) + ' 0 0 ' + cardH + ' ' + x.toFixed(2) + ' ' + y.toFixed(2) + ' cm /C' + k + ' Do Q\n';
+        s += textLayer(im.runs || [], W, H, x, y, cardW, cardH);
       });
       if (ids.imgs.length === 2) s += 'q 0.6 0.6 0.6 RG 0.75 w [6 4] 0 d 40 ' + (ph / 2).toFixed(2) + ' m ' + (pw - 40).toFixed(2) + ' ' + (ph / 2).toFixed(2) + ' l S Q\n';
       obj(ids.content, '<< /Length ' + enc.encode(s).length + ' >>\nstream\n' + s + 'endstream');
@@ -732,7 +772,7 @@
   }
   function downloadPdf() {
     fontsReady().then(function () {
-      var imgs = state.cards.map(function (_, i) { return jpegBytes(drawCard(i, true)); });
+      var imgs = state.cards.map(function (_, i) { var cv = drawCard(i, true); return { jpeg: jpegBytes(cv), runs: cv.runs }; });
       download(buildPdf(imgs), slug() + '.pdf');
     });
   }
