@@ -127,7 +127,7 @@
       shareFoot: 'Hellre skärmdumpar? Det går också bra. Spara PDF:en: öppna den här igen för att göra nya brickor med samma rutor.',
       startOver: 'Gör en ny bingo',
       drawn: 'Ritat', madeWith: ' och designat av mig, kodat med hjälp av AI.', footPromise: 'Gratis · inga annonser · inga trackers', footCounter: 'I den här appen: en enkel besöksräknare', footTool: 'Ett Ellenial-verktyg', footThanks: 'Tack',
-      source: 'Källkod',
+      source: 'GitHub',
       madeIn: 'Skapad i bingo.ellenial.app · Gratis, ingen reklam, inga spårare. Bingo!',
       help: {
         label: 'Så funkar det', title: 'Så funkar det', lead: 'Tre steg, ungefär två minuter.', done: 'Uppfattat', close: 'Stäng',
