@@ -60,12 +60,12 @@
       pdf: 'Download PDF to print', allPics: function (n) { return 'Save all ' + n + ' pictures'; },
       shareFoot: 'Prefer screenshots? That works too. Keep the PDF: open it here again to make new cards from the same squares.',
       startOver: 'Start a new bingo',
-      drawn: 'Drawn', madeWith: ' and designed by me, Ellen, coded with the help of AI. Free, no ads, nothing tracked.',
-      source: 'Source code',
+      drawn: 'Drawn', madeWith: ' and designed by me, coded with the help of AI.', footPromise: 'Free · no ads · no trackers', footCounter: 'In this app: a simple visit counter', footTool: 'An Ellenial tool', footThanks: 'Thanks',
+      source: 'Source',
       madeIn: 'Created in bingo.ellenial.app · Free, no ads, no trackers. Bingo!',
       help: {
         label: 'How it works', title: 'How it works', lead: 'Three steps, about two minutes.', done: 'Got it', close: 'Close',
-        note: "Nothing you make is saved or sent anywhere. Close the tab and it's gone, except the files you download. I only count how many phones open Bingo each day, nothing more.",
+        note: "Nothing you make is saved or sent anywhere. Close the tab and it's gone, except the files you download. In this app: a simple visit counter.",
         steps: [
           { title: 'Write your squares', text: '9 things that might happen, or 8 around a free middle. Stuck? Start from an example.' },
           { title: 'Choose cards and how to win', text: 'How many players, and whether one line, two lines or a full card wins.' },
@@ -126,12 +126,12 @@
       pdf: 'Ladda ner PDF för utskrift', allPics: function (n) { return 'Spara alla ' + n + ' bilder'; },
       shareFoot: 'Hellre skärmdumpar? Det går också bra. Spara PDF:en: öppna den här igen för att göra nya brickor med samma rutor.',
       startOver: 'Gör en ny bingo',
-      drawn: 'Ritat', madeWith: ' och designat av mig, Ellen, kodat med hjälp av AI. Gratis, ingen reklam, ingen spårning.',
+      drawn: 'Ritat', madeWith: ' och designat av mig, kodat med hjälp av AI.', footPromise: 'Gratis · inga annonser · inga trackers', footCounter: 'I den här appen: en enkel besöksräknare', footTool: 'Ett Ellenial-verktyg', footThanks: 'Tack',
       source: 'Källkod',
       madeIn: 'Skapad i bingo.ellenial.app · Gratis, ingen reklam, inga spårare. Bingo!',
       help: {
         label: 'Så funkar det', title: 'Så funkar det', lead: 'Tre steg, ungefär två minuter.', done: 'Uppfattat', close: 'Stäng',
-        note: 'Inget du gör sparas eller skickas någonstans. Stäng fliken så är det borta, utom filerna du laddar ner. Jag räknar bara hur många telefoner som öppnar Bingo varje dag, inget mer.',
+        note: 'Inget du gör sparas eller skickas någonstans. Stäng fliken så är det borta, utom filerna du laddar ner. I den här appen: en enkel besöksräknare.',
         steps: [
           { title: 'Skriv dina rutor', text: '9 saker som kan hända, eller 8 runt en fri mitt. Kört fast? Börja från ett exempel.' },
           { title: 'Välj brickor och hur man vinner', text: 'Hur många spelare, och om en rad, två rader eller full bricka vinner.' },
@@ -389,13 +389,19 @@
     return page;
   }
 
+  // The shared Ellenial footer (9 Nov 2026): Bingo's own line on top, then the same block as every app.
   function footer() {
-    return h('div', { class: 'theme-row' },
-      themeSwitch(),
-      h('p', { class: 'foot', style: 'margin:0', text: t().nothingSaved }),
-      h('p', { class: 'foot', style: 'margin:0' }, h('a', { href: 'https://ellenial.app/drawings', text: t().drawn }), t().madeWith, ' ',
-        h('a', { href: 'https://ellenial.app', text: 'ellenial.app' }), ' · ',
-        h('a', { href: 'https://github.com/phoenixcyberpunk/ellenial-bingo', text: t().source })));
+    return h('footer', { class: 'ell-foot' },
+      h('div', { class: 'ell-notes' }, h('p', { text: t().nothingSaved })),
+      h('div', { class: 'ell-shared' },
+        h('p', null, h('a', { href: 'https://ellenial.app/drawings', text: t().drawn }), t().madeWith),
+        h('p', { text: t().footPromise }),
+        h('p', { text: t().footCounter }),
+        h('p', null,
+          h('a', { href: 'https://ellenial.app', text: t().footTool }), ' · ',
+          h('a', { href: 'https://github.com/phoenixcyberpunk/ellenial-bingo', text: t().source }), ' · ',
+          h('a', { href: 'https://ellenial.app/thanks', text: t().footThanks }))),
+      h('div', { class: 'ell-controls theme-row' }, themeSwitch()));
   }
 
   /* ---------------- view 2: cards and how to win ---------------- */
