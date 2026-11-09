@@ -2,8 +2,9 @@
    A social bingo maker. Write 9 things, choose how many cards and how to win, and every player
    gets the same 9 squares in their own order. Cards go out as pictures (one per player, made on
    this phone with a canvas) or as one PDF to print (also made on this phone, no library).
-   Nothing is sent anywhere and nothing is saved: the PDF itself carries the bingo, so opening it
-   here again brings the squares back. Only the language and theme choice stay on this device. */
+   Nothing you make is sent anywhere or saved: the PDF itself carries the bingo, so opening it
+   here again brings the squares back. Only the language and theme choice stay on this device.
+   The one call out is the daily visit counter at the bottom: an empty +1, once per browser per day. */
 (function () {
   'use strict';
 
@@ -64,7 +65,7 @@
       madeIn: 'Created in bingo.ellenial.app · Free, no ads, no trackers. Bingo!',
       help: {
         label: 'How it works', title: 'How it works', lead: 'Three steps, about two minutes.', done: 'Got it', close: 'Close',
-        note: "Nothing is saved or sent anywhere. Close the tab and it's gone, except the files you download.",
+        note: "Nothing you make is saved or sent anywhere. Close the tab and it's gone, except the files you download. I only count how many phones open Bingo each day, nothing more.",
         steps: [
           { title: 'Write your squares', text: '9 things that might happen, or 8 around a free middle. Stuck? Start from an example.' },
           { title: 'Choose cards and how to win', text: 'How many players, and whether one line, two lines or a full card wins.' },
@@ -130,7 +131,7 @@
       madeIn: 'Skapad i bingo.ellenial.app · Gratis, ingen reklam, inga spårare. Bingo!',
       help: {
         label: 'Så funkar det', title: 'Så funkar det', lead: 'Tre steg, ungefär två minuter.', done: 'Uppfattat', close: 'Stäng',
-        note: 'Inget sparas eller skickas någonstans. Stäng fliken så är det borta, utom filerna du laddar ner.',
+        note: 'Inget du gör sparas eller skickas någonstans. Stäng fliken så är det borta, utom filerna du laddar ner. Jag räknar bara hur många telefoner som öppnar Bingo varje dag, inget mer.',
         steps: [
           { title: 'Skriv dina rutor', text: '9 saker som kan hända, eller 8 runt en fri mitt. Kört fast? Börja från ett exempel.' },
           { title: 'Välj brickor och hur man vinner', text: 'Hur många spelare, och om en rad, två rader eller full bricka vinner.' },
@@ -819,4 +820,17 @@
   }
 
   render(true);
+
+  // Visit counter for Ellen's project board: one count per browser per day, nothing else.
+  // The date is remembered in this browser only; the server just adds 1 to today's number.
+  (function countVisit() {
+    try {
+      if (!(location.hostname === 'bingo.ellenial.app')) return;
+      var day = new Intl.DateTimeFormat('sv-SE', { timeZone: 'Europe/Stockholm' }).format(new Date());
+      if (localStorage.getItem('ellenial-bingo:counted') === day) return;
+      localStorage.setItem('ellenial-bingo:counted', day);
+      if (navigator.sendBeacon) navigator.sendBeacon('/api/visit');
+      else fetch('/api/visit', { method: 'POST', keepalive: true }).catch(function () {});
+    } catch (e) { /* private mode or storage off: skip counting rather than count every load */ }
+  })();
 })();
