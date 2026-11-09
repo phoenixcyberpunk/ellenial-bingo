@@ -5,7 +5,7 @@ Read this first in every session. Social bingo maker under **Ellenial**, English
 ## Infrastructure
 - **Code:** GitHub `phoenixcyberpunk/ellenial-bingo` (public, AGPL-3.0).
 - **Hosting:** Vercel team "The Ellenial Project" (`the-ellenial-project`), project `ellenial-bingo`, domain `bingo.ellenial.app`. Auto-deploys from `main`.
-- **No backend at all:** no Supabase, no live room, no storage beyond `eb:lang` and `eb:theme-pref`. CSP `connect-src 'self'`.
+- **No backend for the bingo itself:** no live room, no storage beyond `eb:lang`, `eb:theme-pref` and `ellenial-bingo:counted`. CSP `connect-src 'self'`. **Exception (9 Nov 2026):** a daily visit counter for Ellen's Ongoing board: `api/visit.js` (Vercel function) calls `public.bingo_count_visit()` once per phone per Stockholm day, which can only add 1 to `ellenial_bingo.daily_visits` (migration in `supabase/migrations`). The page side is `countVisit()` at the end of `app.js`, real address only. The help text says so openly.
 - **Stack:** plain HTML/CSS/JS, no build, no libraries. `fonts/`, `ellenial-theme.js`, `LICENSE`, `TRADEMARK.md` and the base of `styles.css` copied from ellenial poll.
 
 ## Decisions (Ellen, 7 Nov 2026)
