@@ -39,6 +39,8 @@
 
 * { box-sizing: border-box; }
 html, body { margin: 0; min-height: 100%; }
+/* No double-tap zoom (Ellen, 19 Nov 2026); pinch-zoom still works for anyone who needs it. */
+html { touch-action: manipulation; }
 body {
   background: var(--ground); color: var(--ink);
   font-family: var(--body); font-size: 16px; line-height: 1.45;
@@ -117,7 +119,7 @@ h1.q.small { font-size: 26px; line-height: 1.2; }
   aspect-ratio: 1; width: 100%; min-width: 0; resize: none; overflow: hidden;
   padding: 8px; border-radius: 12px; border: 2px solid var(--edge);
   background: var(--surface); color: var(--ink);
-  font-size: 14px; line-height: 1.25; font-weight: 500; text-align: center;
+  font-size: 16px; line-height: 1.2; font-weight: 500; text-align: center;   /* 16px: iPhones zoom in on smaller text boxes */
   display: flex; align-items: center;
 }
 .sq:placeholder-shown { border-style: dashed; }
