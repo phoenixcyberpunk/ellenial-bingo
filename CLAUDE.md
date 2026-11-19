@@ -5,7 +5,7 @@ Read this first in every session. Social bingo maker under **Ellenial**, English
 ## Infrastructure
 - **Code:** GitHub `phoenixcyberpunk/ellenial-bingo` (public, AGPL-3.0).
 - **Hosting:** Vercel team "The Ellenial Project" (`the-ellenial-project`), project `ellenial-bingo`, domain `bingo.ellenial.app`. Auto-deploys from `main`.
-- **No backend for the bingo itself:** no live room, no storage beyond `eb:lang`, `eb:theme-pref` and `ellenial-bingo:counted`. CSP `connect-src 'self'`. **Exception (9 Nov 2026):** a daily visit counter for Ellen's Ongoing board: `api/visit.js` (Vercel function) calls `public.bingo_count_visit()` once per phone per Stockholm day, which can only add 1 to `ellenial_bingo.daily_visits` (migration in `supabase/migrations`). The page side is `countVisit()` at the end of `app.js`, real address only. The help text says so openly.
+- **Backend only for live links (19 Nov 2026), otherwise none:** storage beyond `eb:lang`, `eb:theme-pref`, `ellenial-bingo:counted` and, for players, `eb:live:<code>` (`{card, marks, won, exp}`, removed after the link ends). CSP `connect-src 'self'`. **Exception (9 Nov 2026):** a daily visit counter for Ellen's Ongoing board: `api/visit.js` (Vercel function) calls `public.bingo_count_visit()` once per phone per Stockholm day, which can only add 1 to `ellenial_bingo.daily_visits` (migration in `supabase/migrations`). The page side is `countVisit()` at the end of `app.js`, real address only. The help text says so openly.
 - **Stack:** plain HTML/CSS/JS, no build, no libraries. `fonts/`, `ellenial-theme.js`, `LICENSE`, `TRADEMARK.md` and the base of `styles.css` copied from ellenial poll.
 
 ## Decisions (Ellen, 7 Nov 2026)
@@ -60,6 +60,16 @@ Read this first in every session. Social bingo maker under **Ellenial**, English
 - Tested 19 Nov: Playwright 390×844, dark/light, en/sv: switching sizes, paste, examples, 10 unique cards with the centre free, four corners rule, PDF 2/page (5 sideways pages) and 1/page (10), reopened to the same cards; old 3 × 3 payload still opens; crafted payloads (size 4, wrong counts, corners on 3 × 3, bad cards) rejected or cleaned. axe-core: 0 violations on all new screens, light and dark. No console errors.
 
 - (19 Nov, Ellen) The header shows the icon, the "Ellenial" eyebrow and "Bingo" on every screen; the bingo's own name and size sit under the heading on Settings and Share (`.bingo-sub`).
+
+## Live links (Ellen, 19 Nov 2026; mock-up screens 14–18 + 15b approved, "build to live!")
+- Three ways to share: live link (new, top of the share screen), pictures, PDF. Ellen chose real short links (option B) over links carrying the whole bingo, for the chat preview and so people use the app.
+- Open for 1 day / 2 days (default) / 1 week. One link per shuffle (reshuffling or changing cards drops it).
+- Players see which numbers are taken ("Free"/"Taken", dashed), can still pick a taken one, and get **Random card** (picks the least-shared card) when all are taken. The server counts takes per number only. Polls every 10 s on the pick screen.
+- Tappable card; `judge()` spots line / two lines / corners / full; the **Bingo!** screen (Ellen's drawing hops in, letters pop, confetti, winning squares bounce) plays once; none of it with reduce motion. Unmarking takes the win back.
+- The PDF shows "Play live: bingo.ellenial.app/xxxxx (until …)" while the link is open; pictures keep the normal footer.
+- **Build:** Supabase project `knvrvmqdxvcatsrvkrgx` (the same one as the visit counter, Lapp i hatt and others), schema `ellenial_bingo`: `live_links` (code, payload = the PDF's base64url line, title, size, cards, taken[], expires_at), `live_rate`, `live_secret`. All locked; only `public.bingo_live_create/get/claim` can be called, and each needs the secret, which is in `live_secret` and in Vercel env `BINGO_LIVE_SECRET` (sensitive, production + preview), never in the repo. Rate limits: 10 links/hour per connection fingerprint, 600/hour overall, 60 claims/hour per fingerprint. Fingerprint = HMAC(secret, IP + date), kept ≤ 1 h. Cron `bingo-live-cleanup` (:29 every hour) deletes ended links and old rate rows.
+- `vercel.json` rewrites `/<5 chars from 23456789abcdefghjkmnpqrstuvwxyz>` to `api/page.js` (includes `index.html`) for the og tags. The app reads the code from `location.pathname`. `/api/live` answers `{ended:true}` (200) for ended links.
+- Tested 19 Nov: database functions as the public role (wrong secret refused, tables unreadable, bad card numbers ignored); local Playwright with an in-memory stand-in for the database (this workspace can't reach Supabase): make link en/sv, PDF line, preview tags, pick, taken on another phone, all taken → random (live update), play to bingo (row 3; 3×3 two lines), reload keeps marks, unmark takes it back, ended link, reduce motion; axe-core 0 violations on every new screen, light and dark.
 
 ## Brand
 - Final Ellenial brand: same tokens, fonts and theme switch as poll and quiz. Theme key `eb:theme-pref`. Test with `?theme=light|dark`. Copy in first person ("I").

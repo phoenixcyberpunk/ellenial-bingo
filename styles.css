@@ -223,3 +223,52 @@ h1.q.small { font-size: 26px; line-height: 1.2; }
 
 /* The bingo's own name under the heading, now that the header always says Ellenial Bingo (19 Nov 2026) */
 .bingo-sub { margin: 0; font-size: 15px; color: var(--muted); overflow-wrap: anywhere; }
+
+/* Live links (19 Nov 2026) */
+.live-panel { border: 2px solid var(--accent); }
+.badge { font-size: 12px; font-weight: 700; padding: 4px 10px; border-radius: 999px; background: var(--peri); color: var(--on-peri); }
+.linkrow { display: flex; align-items: center; justify-content: space-between; gap: 8px; min-height: 52px; padding: 0 4px 0 14px; border-radius: 14px; background: var(--ground); border: 1px solid var(--line); }
+.linktext { font-size: 17px; font-weight: 700; overflow-wrap: anywhere; }
+.round.plain { border: 0; background: transparent; color: var(--accent); }
+.offline-h { margin: 8px 0 0; font-family: var(--display); font-weight: 600; font-size: 20px; }
+.pick-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; }
+.pick { aspect-ratio: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; border-radius: 16px; border: 2px solid var(--accent); background: var(--surface); color: var(--ink); }
+.pick-n { font-family: var(--display); font-weight: 600; font-size: 28px; line-height: 30px; }
+.pick-s { font-size: 12px; font-weight: 700; }
+.pick.taken { background: transparent; color: var(--muted); border: 1.5px dashed var(--muted); }
+.pick.taken .pick-s { font-weight: 500; }
+.live-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+.live-grid.five { grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 5px; }
+.live-cell { aspect-ratio: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; padding: 6px; border-radius: 12px; border: 1.5px solid var(--accent); background: var(--surface); color: var(--ink); font-size: 14px; line-height: 1.2; font-weight: 500; text-align: center; overflow: hidden; overflow-wrap: anywhere; touch-action: manipulation; }
+.live-grid.five .live-cell { padding: 3px; border-radius: 8px; font-size: 10.5px; line-height: 1.15; }
+.live-cell[aria-pressed="true"], .live-cell.free { background: var(--peri); color: var(--on-peri); border: 2px solid var(--accent); font-weight: 700; }
+.live-cell .tick { font-size: 15px; line-height: 1; }
+.live-cell.free svg { color: var(--accent); }
+:root[data-theme="dark"] .live-cell.free svg { color: var(--on-peri); }
+.progress { display: flex; align-items: center; gap: 10px; padding: 12px 14px; border-radius: 14px; background: var(--surface); border: 1px solid var(--line); font-size: 14px; }
+.progress .big { font-family: var(--display); font-weight: 600; font-size: 24px; }
+.progress.won { justify-content: space-between; }
+
+/* The Bingo! moment: confetti, the drawing hops in, letters pop, the winning squares bounce. Once. */
+.bingo-page { position: relative; overflow: hidden; }
+.confetti { position: absolute; inset: 0; pointer-events: none; z-index: 0; }
+.confetti span { position: absolute; top: 0; opacity: 0; animation: eb-fall 3s ease-in forwards; }
+.bingo-page > *:not(.confetti) { position: relative; z-index: 1; }
+.hop { align-self: center; width: 128px; height: 128px; border-radius: 24px; animation: eb-hop 1.4s ease-out both; }
+.bingo-big { margin: 0; text-align: center; font-family: var(--display); font-weight: 600; font-size: 56px; line-height: 60px; }
+.bingo-big span { display: inline-block; animation: eb-letter .6s cubic-bezier(.3,1.4,.5,1) both; }
+.fade { animation: eb-fade .5s ease-out 1s both; }
+.mini { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px; padding: 12px; border-radius: 16px; background: var(--surface); }
+.mini.five { grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 5px; }
+.mini .m { aspect-ratio: 1; border-radius: 6px; border: 1.5px solid var(--muted); display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 16px; }
+.mini .m.on { background: var(--peri); color: var(--on-peri); border-color: transparent; }
+.mini .m.w { background: var(--accent); color: var(--on-accent); border-color: transparent; animation: eb-win .5s ease-out both; }
+@keyframes eb-fall { 0% { transform: translateY(-40px) rotate(0); opacity: 0; } 8% { opacity: 1; } 80% { opacity: 1; } 100% { transform: translateY(760px) rotate(540deg); opacity: 0; } }
+@keyframes eb-letter { 0% { transform: translateY(30px) scale(.3); opacity: 0; } 60% { transform: translateY(-14px) scale(1.15); opacity: 1; } 100% { transform: none; opacity: 1; } }
+@keyframes eb-hop { 0% { transform: scale(0) rotate(-12deg); } 35% { transform: scale(1.15) rotate(6deg); } 50% { transform: scale(1) rotate(0); } 65% { transform: rotate(-5deg); } 80% { transform: rotate(5deg); } 100% { transform: none; } }
+@keyframes eb-win { 0% { transform: scale(1); } 50% { transform: scale(1.25); } 100% { transform: scale(1); } }
+@keyframes eb-fade { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+@media (prefers-reduced-motion: reduce) {
+  .confetti { display: none; }
+  .hop, .bingo-big span, .fade, .mini .m.w { animation: none; }
+}

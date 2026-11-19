@@ -33,7 +33,7 @@
       next: 'Next: cards and how to win',
       needAll: function (n, of) { var m = of - n; return 'Write ' + m + ' more ' + (m === 1 ? 'square' : 'squares') + ' to go on.'; },
       needName: 'Give your bingo a name to go on.',
-      nothingSaved: "Nothing is saved. Close the tab and it's gone.",
+      nothingSaved: "Nothing is saved unless you make a live link. Close the tab and it's gone.",
       openPdf: 'Open a bingo PDF', openPdfHint: 'Made one before? Open its PDF to get the squares back.',
       openBad: "That file isn't a bingo PDF from here, so I couldn't read it.",
       back: 'Back',
@@ -55,7 +55,7 @@
       cardOf: function (i, n) { return 'Card ' + i + ' of ' + n; },
       prev: 'Previous card', nextCard: 'Next card',
       toShare: 'Share or download', shuffleAgain: 'Shuffle again', reshuffled: 'New order on every card.',
-      shareTitle: 'Send one card to each player',
+      shareTitle: 'Send one card to each player', howShare: 'How do you want to share?',
       shareLead: "Share opens your phone's share menu, so a card goes straight into a chat.",
       share: 'Share', shared: 'Shared', shareAgain: 'Again', saved: 'Saved',
       shareCard: function (i, n) { return 'Share card ' + i + ' of ' + n; },
@@ -67,12 +67,40 @@
       madeIn: 'Created in bingo.ellenial.app · Free, no ads, no trackers. Bingo!',
       help: {
         label: 'How it works', title: 'How it works', lead: 'Three steps, about two minutes.', done: 'Got it', close: 'Close',
-        note: "Nothing you make is saved or sent anywhere. Close the tab and it's gone, except the files you download. In this app: a simple visit counter.",
+        note: "Pictures and PDFs are made on your phone and never sent anywhere. A live link keeps the bingo on the Ellenial server until it ends, then deletes it: no names, no accounts. In this app: a simple visit counter.",
         steps: [
           { title: 'Write your squares', text: 'Pick 3 × 3 or 5 × 5, then write 9 or 25 things that might happen (one fewer around a free middle). Stuck? Start from an example.' },
           { title: 'Choose cards and how to win', text: 'How many players, and whether one line, two lines, four corners (5 × 5) or a full card wins.' },
-          { title: 'Send a card to each player', text: 'Share a picture into the chat, or print the PDF. Keep the PDF: open it here again to play with the same cards.' }
+          { title: 'Share it', text: 'One live link for the whole group, a picture per player, or the PDF to print. Keep the PDF: open it here again to play with the same cards.' }
         ]
+      },
+      live: {
+        title: 'Live link', badge: 'New',
+        lead: 'One link for the whole group. Everyone opens it, picks a card number and taps their squares on their own phone.',
+        openFor: 'Open for', hours: { 24: '1 day', 48: '2 days', 168: '1 week' },
+        notePre: 'Your bingo is kept on the Ellenial server until the link ends, then deleted for good. No names, no accounts.',
+        note: function (d) { return 'Open until ' + d + '. Until then your bingo is kept on the Ellenial server, then deleted for good. No names, no accounts.'; },
+        make: 'Make a live link', making: 'Making the link…', share: 'Share the live link', copy: 'Copy link', copied: 'Link copied.',
+        fail: "Couldn't make the link. Check your connection and try again.", busy: 'Too many links made from here just now. Try again in a while.',
+        orOffline: 'Or offline', offlineNote: 'Pictures and the PDF never leave your phone.',
+        pdfLine: function (u, d) { return 'Play live: ' + u + ' (until ' + d + ')'; },
+        shareText: function (title) { return title + ': pick a card and play'; },
+        openUntil: function (d) { return 'Open until ' + d; },
+        free: 'Free', taken: 'Taken', freeCount: function (n, m) { return n + ' of ' + m + ' free'; }, updates: 'Updates live',
+        pickLead: 'Pick a free card.', pickNote: 'Only which numbers are taken is counted, never who took them. Your marks stay on this phone.',
+        allTaken: function (m) { return 'All ' + m + ' cards are taken'; }, allTakenLead: 'You can still join. Pick any number above, or let me pick one for you.',
+        random: 'Random card', cardAria: function (i, tk) { return 'Card ' + i + (tk ? ', taken' : ', free'); },
+        tapHint: 'Tap a square when it happens. Tap again to undo.',
+        goal: { line: 'a line', two: 'two lines', corners: 'the four corners', full: 'a full card' },
+        away: function (n, g) { return (n === 1 ? '1 square' : n + ' squares') + ' away from ' + g; },
+        won: 'You have bingo!', seeBingo: 'See your bingo',
+        marksNote: function (d) { return 'Marks stay on this phone. Open until ' + d + '.'; }, otherCard: 'Pick another card',
+        bingoLead: function (i, n) { return 'Card ' + i + ' of ' + n + ' is a winner. Show this screen to the group.'; }, keep: 'Keep playing',
+        what: { row: function (k) { return 'row ' + k; }, col: function (k) { return 'column ' + k; }, diag: 'a diagonal', corners: 'the four corners', full: 'the full card' },
+        winning: function (list) { return 'Winning: ' + list; },
+        ended: 'This bingo has ended', endedLead: 'Live links close when their time is up, and everything in them is deleted. Hope it was a good one.',
+        makeOwn: 'Make your own bingo', loadFail: "Couldn't load this bingo. Check your connection.", retry: 'Try again', loading: 'Opening the bingo…',
+        playNote: 'Your card and marks stay on this phone.'
       },
       fileCard: 'card', theme: 'Appearance', themeLabels: { auto: 'Auto', light: 'Light', dark: 'Dark' },
       examples: [
@@ -106,7 +134,7 @@
       next: 'Nästa: brickor och hur man vinner',
       needAll: function (n, of) { var m = of - n; return 'Skriv ' + m + ' ' + (m === 1 ? 'ruta' : 'rutor') + ' till för att gå vidare.'; },
       needName: 'Ge din bingo ett namn för att gå vidare.',
-      nothingSaved: 'Inget sparas. Stäng fliken så är det borta.',
+      nothingSaved: 'Inget sparas om du inte gör en livelänk. Stäng fliken så är det borta.',
       openPdf: 'Öppna en bingo-PDF', openPdfHint: 'Gjort en förut? Öppna dess PDF så kommer rutorna tillbaka.',
       openBad: 'Den filen är ingen bingo-PDF härifrån, så jag kunde inte läsa den.',
       back: 'Tillbaka',
@@ -128,7 +156,7 @@
       cardOf: function (i, n) { return 'Bricka ' + i + ' av ' + n; },
       prev: 'Förra brickan', nextCard: 'Nästa bricka',
       toShare: 'Dela eller ladda ner', shuffleAgain: 'Blanda igen', reshuffled: 'Ny ordning på varje bricka.',
-      shareTitle: 'Skicka en bricka till varje spelare',
+      shareTitle: 'Skicka en bricka till varje spelare', howShare: 'Hur vill du dela?',
       shareLead: 'Dela öppnar telefonens delningsmeny, så att en bricka går rakt in i en chatt.',
       share: 'Dela', shared: 'Delad', shareAgain: 'Igen', saved: 'Sparad',
       shareCard: function (i, n) { return 'Dela bricka ' + i + ' av ' + n; },
@@ -140,12 +168,40 @@
       madeIn: 'Skapad i bingo.ellenial.app · Gratis, ingen reklam, inga spårare. Bingo!',
       help: {
         label: 'Så funkar det', title: 'Så funkar det', lead: 'Tre steg, ungefär två minuter.', done: 'Uppfattat', close: 'Stäng',
-        note: 'Inget du gör sparas eller skickas någonstans. Stäng fliken så är det borta, utom filerna du laddar ner. I den här appen: en enkel besöksräknare.',
+        note: 'Bilder och PDF görs i din mobil och skickas aldrig någonstans. En livelänk sparar bingon på Ellenials server tills den stänger, sedan raderas den: inga namn, inga konton. I den här appen: en enkel besöksräknare.',
         steps: [
           { title: 'Skriv dina rutor', text: 'Välj 3 × 3 eller 5 × 5 och skriv 9 eller 25 saker som kan hända (en färre runt en fri mitt). Kört fast? Börja från ett exempel.' },
           { title: 'Välj brickor och hur man vinner', text: 'Hur många spelare, och om en rad, två rader, fyra hörn (5 × 5) eller full bricka vinner.' },
-          { title: 'Skicka en bricka till varje spelare', text: 'Dela en bild i chatten, eller skriv ut PDF:en. Spara PDF:en: öppna den här igen för att spela med samma brickor.' }
+          { title: 'Dela den', text: 'En livelänk till hela gruppen, en bild per spelare, eller PDF:en att skriva ut. Spara PDF:en: öppna den här igen för att spela med samma brickor.' }
         ]
+      },
+      live: {
+        title: 'Livelänk', badge: 'Ny',
+        lead: 'En länk till hela gruppen. Alla öppnar den, väljer ett bricknummer och trycker på sina rutor i sin egen mobil.',
+        openFor: 'Öppen i', hours: { 24: '1 dag', 48: '2 dagar', 168: '1 vecka' },
+        notePre: 'Din bingo sparas på Ellenials server tills länken stänger, sedan raderas den för gott. Inga namn, inga konton.',
+        note: function (d) { return 'Öppen till ' + d + '. Till dess sparas din bingo på Ellenials server, sedan raderas den för gott. Inga namn, inga konton.'; },
+        make: 'Gör en livelänk', making: 'Gör länken…', share: 'Dela livelänken', copy: 'Kopiera länk', copied: 'Länken kopierad.',
+        fail: 'Kunde inte göra länken. Kolla anslutningen och försök igen.', busy: 'För många länkar härifrån just nu. Försök igen om en stund.',
+        orOffline: 'Eller offline', offlineNote: 'Bilder och PDF lämnar aldrig din mobil.',
+        pdfLine: function (u, d) { return 'Spela live: ' + u + ' (till ' + d + ')'; },
+        shareText: function (title) { return title + ': välj en bricka och spela'; },
+        openUntil: function (d) { return 'Öppen till ' + d; },
+        free: 'Ledig', taken: 'Tagen', freeCount: function (n, m) { return n + ' av ' + m + ' lediga'; }, updates: 'Uppdateras live',
+        pickLead: 'Välj en ledig bricka.', pickNote: 'Bara vilka nummer som är tagna räknas, aldrig vem som tog dem. Dina markeringar stannar i den här mobilen.',
+        allTaken: function (m) { return 'Alla ' + m + ' brickor är tagna'; }, allTakenLead: 'Du kan ändå vara med. Välj valfritt nummer ovan, eller låt mig välja åt dig.',
+        random: 'Slumpa bricka', cardAria: function (i, tk) { return 'Bricka ' + i + (tk ? ', tagen' : ', ledig'); },
+        tapHint: 'Tryck på en ruta när det händer. Tryck igen för att ångra.',
+        goal: { line: 'en rad', two: 'två rader', corners: 'fyra hörn', full: 'full bricka' },
+        away: function (n, g) { return (n === 1 ? '1 ruta' : n + ' rutor') + ' kvar till ' + g; },
+        won: 'Du har bingo!', seeBingo: 'Se din bingo',
+        marksNote: function (d) { return 'Markeringarna stannar i den här mobilen. Öppen till ' + d + '.'; }, otherCard: 'Välj en annan bricka',
+        bingoLead: function (i, n) { return 'Bricka ' + i + ' av ' + n + ' vinner. Visa den här skärmen för gruppen.'; }, keep: 'Spela vidare',
+        what: { row: function (k) { return 'rad ' + k; }, col: function (k) { return 'kolumn ' + k; }, diag: 'en diagonal', corners: 'de fyra hörnen', full: 'hela brickan' },
+        winning: function (list) { return 'Vinst: ' + list; },
+        ended: 'Den här bingon är slut', endedLead: 'Livelänkar stängs när tiden är ute, och allt i dem raderas. Hoppas det var en bra en.',
+        makeOwn: 'Gör din egen bingo', loadFail: 'Kunde inte ladda bingon. Kolla anslutningen.', retry: 'Försök igen', loading: 'Öppnar bingon…',
+        playNote: 'Din bricka och dina markeringar stannar i den här mobilen.'
       },
       fileCard: 'bricka', theme: 'Utseende', themeLabels: { auto: 'Auto', light: 'Ljust', dark: 'Mörkt' },
       examples: [
@@ -172,6 +228,11 @@
     squares: blank(9),
     keep: {},         // the other size's squares and free choice, so switching back loses nothing
     pasteOpen: false,
+    liveHours: 48,    // live link: 24 | 48 | 168 hours (Ellen, 19 Nov 2026)
+    live: null,       // { code, expires } once made for these cards
+    liveBusy: false,
+    liveErr: '',
+    play: null,       // a player on a live link: { code, b, expires, taken, card, marks, won }
     count: 8,
     win: 'line',
     free: false,      // free square in the middle (Ellen, 8 Nov 2026): off by default
@@ -223,7 +284,8 @@
     save: '<path d="M12 4v11"/><path d="m7 10 5 5 5-5"/><path d="M5 20h14"/>',
     shuffle: '<path d="M16 3h5v5"/><path d="M4 20L21 3"/><path d="M21 16v5h-5"/><path d="M15 15l6 6"/><path d="M4 4l5 5"/>',
     file: '<path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5"/>',
-    check: '<path d="M5 12.5l4.5 4.5L19 7.5"/>'
+    check: '<path d="M5 12.5l4.5 4.5L19 7.5"/>',
+    copy: '<rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V6a2 2 0 0 1 2-2h9"/>'
   };
   function icon(name, size) {
     var s = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
@@ -504,9 +566,9 @@
   }
 
   // The shared Ellenial footer (9 Nov 2026): Bingo's own line on top, then the same block as every app.
-  function footer() {
+  function footer(note) {
     return h('footer', { class: 'ell-foot' },
-      h('div', { class: 'ell-notes' }, h('p', { text: t().nothingSaved })),
+      h('div', { class: 'ell-notes' }, h('p', { text: note || t().nothingSaved })),
       h('div', { class: 'ell-shared' },
         h('p', null, h('a', { href: 'https://ellenial.app/drawings', text: t().drawn }), t().madeWith),
         h('p', { text: t().footPromise }),
@@ -553,7 +615,7 @@
         h('div', { class: 'choices', role: 'radiogroup', 'aria-labelledby': 'howwin' }, choices)),
       h('div', { class: 'grow' }),
       h('button', { class: 'btn', onclick: function () {
-        state.cards = shuffleCards(state.count); state.idx = 0; state.sent = {};
+        state.cards = shuffleCards(state.count); state.idx = 0; state.sent = {}; state.live = null; state.liveErr = '';
         go('preview');
       } }, icon('shuffle'), t().shuffle(state.count)));
   }
@@ -596,7 +658,7 @@
       h('div', { class: 'stack' },
         h('button', { class: 'btn', onclick: function () { go('share'); } }, t().toShare),
         h('button', { id: 'reshuffle', class: 'btn ghost', onclick: function () {
-          state.cards = shuffleCards(state.cards.length); state.idx = 0; state.sent = {}; state.note = t().reshuffled; render();
+          state.cards = shuffleCards(state.cards.length); state.idx = 0; state.sent = {}; state.live = null; state.liveErr = ''; state.note = t().reshuffled; render();
         } }, icon('shuffle'), t().shuffleAgain)));
   }
 
@@ -615,10 +677,13 @@
     });
     return h('div', { class: 'page' },
       topBar('preview'),
+      h('div', { class: 'stack', style: 'gap:4px' },
+        h('h1', { class: 'q small', text: t().howShare }),
+        h('p', { class: 'bingo-sub', text: state.title + ' · ' + state.size + ' × ' + state.size })),
+      livePanel(),
       h('div', { class: 'stack', style: 'gap:6px' },
-        h('h1', { class: 'q small', text: t().shareTitle }),
-        h('p', { class: 'bingo-sub', text: state.title + ' · ' + state.size + ' × ' + state.size }),
-        h('p', { class: 'note', style: 'font-size:14px', text: t().shareLead })),
+        h('h2', { class: 'offline-h', text: t().live.orOffline }),
+        h('p', { class: 'note', style: 'font-size:14px', text: t().live.offlineNote + ' ' + t().shareLead })),
       h('div', { class: 'cards-list' }, rows),
       state.note ? h('p', { class: 'toast', role: 'status', text: state.note }) : null,
       h('div', { class: 'grow' }),
@@ -634,7 +699,7 @@
         h('button', { id: 'allpics', class: 'btn ghost', onclick: saveAll }, t().allPics(n))),
       h('p', { class: 'note', text: t().shareFoot }),
       h('button', { class: 'btn link', style: 'align-self:center', onclick: function () {
-        state.title = ''; state.squares = blank(cellsN()); state.keep = {}; state.cards = []; state.sent = {}; state.undo = null; state.free = state.size === 5;
+        state.title = ''; state.squares = blank(cellsN()); state.keep = {}; state.cards = []; state.sent = {}; state.undo = null; state.free = state.size === 5; state.live = null; state.liveErr = '';
         go('write');
       } }, t().startOver));
   }
@@ -776,7 +841,8 @@
     ctx.fillStyle = PAL.ink; ctx.font = '500 ' + rule.size + 'px ' + SANS;
     ctx.fillText(rule.lines[0], pad, below + 70);
     runAt(ctx, runs, rule.lines[0], pad, below + 70, rule.size);
-    var made = fitText(ctx, t().madeIn, '400 {s}px ' + SANS, W - pad * 2, 40, 30, 22);
+    var foot = forPrint && liveOpen() ? t().live.pdfLine(liveUrl(true), when(state.live.expires)) : t().madeIn;
+    var made = fitText(ctx, foot, '400 {s}px ' + SANS, W - pad * 2, 40, 30, 22);
     ctx.fillStyle = PAL.muted; ctx.font = '400 ' + made.size + 'px ' + SANS;
     ctx.fillText(made.lines[0], pad, H - pad + 6);
     runAt(ctx, runs, made.lines[0], pad, H - pad + 6, made.size);
@@ -855,11 +921,14 @@
     // Plain ASCII for the PDF's own metadata; the full text lives in the bingo line.
     return '(' + s.normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^\x20-\x7e]/g, '').replace(/([()\\])/g, '\\$1') + ')';
   }
+  function bingoPayload() {
+    return b64u(JSON.stringify({ v: 1, size: state.size, title: state.title, squares: state.squares, count: state.cards.length, win: state.win, free: state.free, perPage: state.perPage, cards: state.cards.map(function (c) { return c.map(function (k) { return k.toString(36); }).join(''); }), lang: lang }));
+  }
   function buildPdf(images) {
     var enc = new TextEncoder(), parts = [], len = 0, offsets = [];
     function push(x) { var b = typeof x === 'string' ? enc.encode(x) : x; parts.push(b); len += b.length; }
     // Cards are written one character per square: 0–8 on 3 × 3 (as before 19 Nov), 0–9 and a–o on 5 × 5.
-    var payload = b64u(JSON.stringify({ v: 1, size: state.size, title: state.title, squares: state.squares, count: state.cards.length, win: state.win, free: state.free, perPage: state.perPage, cards: state.cards.map(function (c) { return c.map(function (k) { return k.toString(36); }).join(''); }), lang: lang }));
+    var payload = bingoPayload();
     push('%PDF-1.4\n%\xe2\xe3\xcf\xd3\n'.replace(/[\x80-\xff]/g, '~'));
     push(PDF_MARK + payload + '\n');
     var per = state.perPage === 1 ? 1 : 2;
@@ -926,7 +995,7 @@
       if (!b) { state.note = t().openBad; render(); return; }
       state.size = b.size; state.keep = {}; state.pasteOpen = false;
       state.title = b.title; state.squares = b.squares; state.count = b.count; state.win = b.win; state.free = b.free; state.perPage = b.perPage;
-      state.cards = b.cards; state.idx = 0; state.sent = {}; state.undo = null;
+      state.cards = b.cards; state.idx = 0; state.sent = {}; state.undo = null; state.live = null; state.liveErr = '';
       if (b.lang && b.lang !== lang) { lang = b.lang; }
       go('preview');
     }).catch(function () { state.note = t().openBad; render(); });
@@ -956,14 +1025,270 @@
     } catch (e) { return null; }
   }
 
-  var VIEWS = { write: viewWrite, settings: viewSettings, preview: viewPreview, share: viewShare };
+  /* ---------------- live links (19 Nov 2026) ----------------
+     The maker gets one short link for the group (api/live.js keeps the bingo until it ends).
+     Players open it, pick a card number (the server only counts how many took each number),
+     and tap their squares. Their card and marks stay in this browser: eb:live:<code>. */
+
+  var LIVE_CODE = /^[2-9a-hjkmnp-z]{5}$/;
+  function api(method, body, qs) {
+    return fetch('/api/live' + (qs || ''), {
+      method: method, cache: 'no-store',
+      headers: body ? { 'Content-Type': 'application/json' } : {},
+      body: body ? JSON.stringify(body) : undefined
+    }).then(function (r) { return r.json().catch(function () { return {}; }).then(function (j) { return { status: r.status, j: j }; }); });
+  }
+  function when(d) {
+    try { return new Intl.DateTimeFormat(lang === 'sv' ? 'sv-SE' : 'en-GB', { weekday: 'short', day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' }).format(new Date(d)); }
+    catch (e) { return String(d); }
+  }
+  function liveOpen() { return !!(state.live && new Date(state.live.expires) > new Date()); }
+  function liveUrl(short) { return (short ? location.host : location.origin) + '/' + state.live.code; }
+
+  function makeLive() {
+    if (state.liveBusy) return;
+    state.liveBusy = true; state.liveErr = ''; render();
+    api('POST', { action: 'create', payload: bingoPayload(), hours: state.liveHours }).then(function (r) {
+      state.liveBusy = false;
+      if (r.status === 200 && r.j && LIVE_CODE.test(r.j.code)) state.live = { code: r.j.code, expires: r.j.expires };
+      else state.liveErr = r.status === 429 ? t().live.busy : t().live.fail;
+      render();
+    }, function () { state.liveBusy = false; state.liveErr = t().live.fail; render(); });
+  }
+  function copyLive() {
+    var u = liveUrl(false);
+    var done = function () { state.note = t().live.copied; render(); };
+    if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(u).then(done, function () {});
+  }
+  function shareLive() {
+    var u = liveUrl(false), data = { title: state.title, text: t().live.shareText(state.title), url: u };
+    try { if (navigator.share && (!navigator.canShare || navigator.canShare(data))) { navigator.share(data).catch(function () {}); return; } } catch (e) { /* fall back to copy */ }
+    copyLive();
+  }
+  function livePanel() {
+    var L = t().live, body;
+    if (liveOpen()) {
+      body = [
+        h('div', { class: 'linkrow' },
+          h('span', { id: 'livelink', class: 'linktext', text: liveUrl(true) }),
+          h('button', { id: 'copylive', class: 'round plain', 'aria-label': L.copy, onclick: copyLive }, icon('copy', 20))),
+        h('p', { class: 'note', text: L.note(when(state.live.expires)) }),
+        h('button', { id: 'sharelive', class: 'btn', onclick: shareLive }, icon('share'), L.share)
+      ];
+    } else {
+      body = [
+        h('span', { id: 'openfor', style: 'font-size:14px;font-weight:700', text: L.openFor }),
+        h('div', { class: 'seg', role: 'group', 'aria-labelledby': 'openfor' }, [24, 48, 168].map(function (k) {
+          return h('button', { id: 'hours' + k, 'aria-pressed': String(state.liveHours === k), onclick: function () { state.liveHours = k; render(); } },
+            state.liveHours === k ? '✓ ' : '', L.hours[k]);
+        })),
+        h('p', { class: 'note', text: L.notePre }),
+        state.liveErr ? h('p', { class: 'toast', role: 'alert', text: state.liveErr }) : null,
+        h('button', { id: 'makelive', class: 'btn', disabled: state.liveBusy, onclick: makeLive }, state.liveBusy ? L.making : L.make)
+      ];
+    }
+    return h('section', { class: 'panel live-panel' },
+      h('div', { class: 'row-between', style: 'align-items:center' },
+        h('h2', { text: L.title }), h('span', { class: 'badge', text: L.badge })),
+      h('p', { class: 'note', style: 'font-size:14px', text: L.lead }),
+      body);
+  }
+
+  // ---- player side ----
+  function liveKey(code) { return 'eb:live:' + code; }
+  function saveMine() {
+    var p = state.play;
+    store(liveKey(p.code), { card: p.card, marks: Object.keys(p.marks).map(Number), won: p.won, exp: p.expires });
+  }
+  function cleanOldLive() {
+    try {
+      for (var i = localStorage.length - 1; i >= 0; i--) {
+        var k = localStorage.key(i);
+        if (k && k.indexOf('eb:live:') === 0) { var v = store(k); if (!v || !v.exp || new Date(v.exp) < new Date()) localStorage.removeItem(k); }
+      }
+    } catch (e) { /* storage off */ }
+  }
+  var poll = null;
+  function stopPoll() { if (poll) { clearInterval(poll); poll = null; } }
+  function loadLive(code, quiet) {
+    if (!quiet) { state.view = 'loading'; render(true); }
+    return api('GET', null, '?code=' + code).then(function (r) {
+      if (r.status === 200 && r.j && r.j.ended) { stopPoll(); state.view = 'ended'; render(true); return; }
+      if (r.status !== 200 || !r.j || !r.j.payload) { if (!quiet) { state.view = 'loadfail'; render(true); } return; }
+      var b = parseBingo(r.j.payload);
+      if (!b) { stopPoll(); state.view = 'ended'; render(true); return; }
+      var taken = Array.isArray(r.j.taken) ? r.j.taken.map(Number) : [];
+      if (quiet && state.play && state.play.code === code) {
+        if (taken.join() !== state.play.taken.join()) { state.play.taken = taken; if (state.view === 'join') render(); }
+        return;
+      }
+      var mine = store(liveKey(code)) || {}, marks = {};
+      (Array.isArray(mine.marks) ? mine.marks : []).forEach(function (k) { if (k >= 0 && k < b.size * b.size) marks[k] = 1; });
+      // The bingo's own settings drive the card helpers (size, free middle, squares).
+      state.size = b.size; state.free = b.free; state.squares = b.squares; state.title = b.title; state.win = b.win; state.cards = b.cards;
+      state.play = { code: code, b: b, expires: r.j.expires, taken: taken,
+        card: Number.isInteger(mine.card) && mine.card >= 0 && mine.card < b.cards.length ? mine.card : null, marks: marks, won: !!mine.won };
+      go(state.play.card === null ? 'join' : 'play');
+    }, function () { if (!quiet) { state.view = 'loadfail'; render(true); } });
+  }
+  function claim(i) {
+    var p = state.play;
+    api('POST', { action: 'claim', code: p.code, card: i + 1 }).then(function (r) {
+      if (r.status === 200 && r.j && r.j.ended) { state.view = 'ended'; render(true); return; }
+      if (r.status === 200 && r.j && Array.isArray(r.j.taken)) p.taken = r.j.taken.map(Number);
+    }, function () {});
+    // Play right away; the count catches up (a lost claim only means the number looks free to others).
+    p.card = i; p.marks = {}; p.won = false; saveMine(); stopPoll(); go('play');
+  }
+
+  // Lines, corners and full card, by position on the card.
+  function allLines(n) {
+    var out = [], r, c, a, b2, d1 = [], d2 = [];
+    for (r = 0; r < n; r++) { a = []; for (c = 0; c < n; c++) a.push(r * n + c); out.push({ kind: 'row', k: r + 1, cells: a }); }
+    for (c = 0; c < n; c++) { b2 = []; for (r = 0; r < n; r++) b2.push(r * n + c); out.push({ kind: 'col', k: c + 1, cells: b2 }); }
+    for (r = 0; r < n; r++) { d1.push(r * n + r); d2.push(r * n + (n - 1 - r)); }
+    out.push({ kind: 'diag', cells: d1 }, { kind: 'diag', cells: d2 });
+    return out;
+  }
+  function judge() {
+    var p = state.play, n = p.b.size, mid = (n * n - 1) / 2;
+    function on(k) { return !!p.marks[k] || (p.b.free && k === mid); }
+    function missing(cells) { return cells.filter(function (k) { return !on(k); }).length; }
+    var win = p.b.win, lines = allLines(n), done = lines.filter(function (l) { return missing(l.cells) === 0; });
+    if (win === 'corners') { var cs = [0, n - 1, n * (n - 1), n * n - 1]; return { away: missing(cs), cells: cs, what: [{ kind: 'corners' }] }; }
+    if (win === 'full') { var all = []; for (var k = 0; k < n * n; k++) all.push(k); return { away: missing(all), cells: all, what: [{ kind: 'full' }] }; }
+    var cells = {}; done.forEach(function (l) { l.cells.forEach(function (k) { cells[k] = 1; }); });
+    if (win === 'two') {
+      var best = 99;
+      for (var i = 0; i < lines.length; i++) for (var j = i + 1; j < lines.length; j++) {
+        var u = {}; lines[i].cells.concat(lines[j].cells).forEach(function (k) { u[k] = 1; });
+        best = Math.min(best, missing(Object.keys(u).map(Number)));
+      }
+      return { away: done.length >= 2 ? 0 : best, cells: Object.keys(cells).map(Number), what: done };
+    }
+    return { away: done.length ? 0 : Math.min.apply(null, lines.map(function (l) { return missing(l.cells); })), cells: Object.keys(cells).map(Number), what: done };
+  }
+  function whatText(list) {
+    var W2 = t().live.what;
+    return list.map(function (w) { return typeof W2[w.kind] === 'function' ? W2[w.kind](w.k) : W2[w.kind]; }).join(', ');
+  }
+
+  function viewLoading() {
+    return h('div', { class: 'page' }, topBar(null), h('h1', { class: 'q', text: t().live.loading }));
+  }
+  function viewLoadFail() {
+    var code = state.play ? state.play.code : livePath();
+    return h('div', { class: 'page' }, topBar(null),
+      h('h1', { class: 'q', text: t().live.loadFail }),
+      h('button', { class: 'btn', onclick: function () { loadLive(code); } }, t().live.retry));
+  }
+  function viewEnded() {
+    return h('div', { class: 'page' }, topBar(null),
+      h('div', { class: 'grow' }),
+      h('h1', { class: 'q', text: t().live.ended }),
+      h('p', { class: 'lead', text: t().live.endedLead }),
+      h('a', { class: 'btn', href: '/' }, t().live.makeOwn),
+      h('div', { class: 'grow' }),
+      footer());
+  }
+  function liveHead() {
+    var p = state.play, b = p.b;
+    return h('div', { class: 'stack', style: 'gap:6px' },
+      h('h1', { class: 'q', text: b.title }),
+      h('p', { class: 'lead', text: b.size + ' × ' + b.size + ' · ' + ruleText(b.win) + ' · ' + t().live.openUntil(when(p.expires)) }));
+  }
+  function viewJoin() {
+    var p = state.play, L = t().live, m = p.b.cards.length, free = 0;
+    for (var i = 0; i < m; i++) if (!(p.taken[i] > 0)) free++;
+    if (!poll) poll = setInterval(function () { if (state.view === 'join') loadLive(p.code, true); else stopPoll(); }, 10000);
+    var grid = h('div', { class: 'pick-grid', role: 'group', 'aria-label': L.pickLead }, p.b.cards.map(function (_, k) {
+      var tk = p.taken[k] > 0;
+      return h('button', { id: 'pick' + (k + 1), class: 'pick' + (tk ? ' taken' : ''), 'aria-label': L.cardAria(k + 1, tk), onclick: function () { claim(k); } },
+        h('span', { class: 'pick-n', text: String(k + 1) }), h('span', { class: 'pick-s', text: tk ? L.taken : L.free }));
+    }));
+    return h('div', { class: 'page' }, topBar(null), liveHead(),
+      h('div', { class: 'row-between' },
+        h('span', { style: 'font-size:14px;font-weight:700', 'aria-live': 'polite', text: free ? L.freeCount(free, m) : L.allTaken(m) }),
+        h('span', { class: 'note', text: L.updates })),
+      grid,
+      free ? h('p', { class: 'note', text: L.pickNote }) :
+        h('section', { class: 'panel' },
+          h('p', { style: 'margin:0;font-size:15px', text: L.allTakenLead }),
+          h('button', { id: 'random', class: 'btn', onclick: function () {
+            var low = Math.min.apply(null, p.taken.slice(0, m).map(function (x) { return x || 0; })), pool = [];
+            for (var k = 0; k < m; k++) if ((p.taken[k] || 0) === low) pool.push(k);
+            claim(pool[randInt(pool.length)]);
+          } }, icon('shuffle'), L.random)),
+      h('div', { class: 'grow' }),
+      footer(L.playNote));
+  }
+  function viewPlay() {
+    var p = state.play, L = t().live, b = p.b, n = b.size, mid = (n * n - 1) / 2, res = judge();
+    var order = b.cards[p.card];
+    var grid = h('div', { class: 'live-grid' + (n === 5 ? ' five' : ''), role: 'group', 'aria-label': t().cardOf(p.card + 1, b.cards.length) }, order.map(function (sqIdx, pos) {
+      if (b.free && pos === mid) return h('div', { class: 'live-cell free', role: 'img', 'aria-label': t().freeLabel }, starIcon(n === 5 ? 14 : 22), h('span', { text: t().free }));
+      var on = !!p.marks[pos];
+      return h('button', { id: 'cell' + pos, class: 'live-cell', 'aria-pressed': String(on), onclick: function () {
+        if (p.marks[pos]) delete p.marks[pos]; else p.marks[pos] = 1;
+        var now = judge();
+        if (now.away === 0 && !p.won) { p.won = true; saveMine(); go('bingo'); return; }
+        if (now.away > 0) p.won = false;
+        saveMine(); render();
+      } }, on ? h('span', { class: 'tick', 'aria-hidden': 'true', text: '✓' }) : null, h('span', { text: b.squares[sqIdx] }));
+    }));
+    return h('div', { class: 'page' }, topBar(null),
+      h('div', { class: 'row-between', style: 'align-items:center' },
+        h('h1', { class: 'bingo-title', style: 'margin:0', text: b.title }),
+        h('span', { class: 'card-no', text: t().cardOf(p.card + 1, b.cards.length) })),
+      h('p', { class: 'note', style: 'font-size:14px', text: L.tapHint }),
+      grid,
+      res.away === 0
+        ? h('div', { class: 'progress won' }, h('strong', { text: L.won }), h('button', { class: 'btn small', onclick: function () { go('bingo'); } }, L.seeBingo))
+        : h('div', { class: 'progress', 'aria-live': 'polite' }, h('span', { class: 'big', text: String(res.away) }), h('span', { text: L.away(res.away, L.goal[b.win]).replace(/^\d+ /, '') })),
+      h('div', { class: 'grow' }),
+      h('p', { class: 'note', style: 'text-align:center', text: L.marksNote(when(p.expires)) }),
+      h('button', { class: 'btn link', style: 'align-self:center', onclick: function () { p.card = null; p.marks = {}; p.won = false; store(liveKey(p.code), null); go('join'); } }, L.otherCard),
+      footer(L.playNote));
+  }
+  function viewBingo() {
+    var p = state.play, L = t().live, b = p.b, n = b.size, res = judge(), win = {}, mid = (n * n - 1) / 2;
+    res.cells.forEach(function (k) { win[k] = 1; });
+    var conf = h('div', { class: 'confetti', 'aria-hidden': 'true' });
+    for (var j = 0; j < 26; j++) {
+      var size = 6 + (j * 7) % 7, round = j % 3 === 0;
+      conf.appendChild(h('span', { style: 'left:' + ((j * 37) % 96 + 2) + '%;width:' + size + 'px;height:' + (round ? size : Math.round(size * 1.8)) + 'px;border-radius:' + (round ? '999px' : '2px') +
+        ';background:' + ['var(--accent)', 'var(--peri)', '#F3E3B5', '#DCDCF5'][j % 4] + ';animation-delay:' + ((j * 0.13) % 1.2).toFixed(2) + 's;animation-duration:' + (2.6 + (j % 5) * 0.15).toFixed(2) + 's' }));
+    }
+    var mini = h('div', { class: 'mini' + (n === 5 ? ' five' : ''), role: 'img', 'aria-label': L.winning(whatText(res.what)) });
+    for (var k = 0; k < n * n; k++) {
+      var on = !!p.marks[k] || (b.free && k === mid);
+      mini.appendChild(h('span', { class: 'm' + (win[k] ? ' w' : on ? ' on' : ''), style: win[k] ? 'animation-delay:' + (0.6 + 0.08 * Object.keys(win).indexOf(String(k))).toFixed(2) + 's' : null, text: win[k] ? '★' : on ? '✓' : '' }));
+    }
+    return h('div', { class: 'page bingo-page' }, conf, topBar(null),
+      h('img', { class: 'hop', src: '/drawings/bingo.png', alt: '', width: '128', height: '128' }),
+      h('h1', { class: 'bingo-big', 'aria-label': L.won }, 'Bingo!'.split('').map(function (ch, i) {
+        return h('span', { 'aria-hidden': 'true', style: 'animation-delay:' + (0.25 + 0.07 * i).toFixed(2) + 's', text: ch });
+      })),
+      h('p', { class: 'lead fade', style: 'text-align:center', text: L.bingoLead(p.card + 1, b.cards.length) }),
+      mini,
+      h('p', { class: 'fade', style: 'text-align:center;margin:0;font-weight:500', text: L.winning(whatText(res.what)) }),
+      h('div', { class: 'grow' }),
+      h('button', { class: 'btn', onclick: function () { go('play'); } }, L.keep),
+      h('a', { class: 'btn link', style: 'align-self:center', href: '/' }, L.makeOwn));
+  }
+  function livePath() { var m = location.pathname.match(/^\/([2-9a-hjkmnp-z]{5})\/?$/); return m ? m[1] : null; }
+
+  var VIEWS = { write: viewWrite, settings: viewSettings, preview: viewPreview, share: viewShare,
+    loading: viewLoading, loadfail: viewLoadFail, ended: viewEnded, join: viewJoin, play: viewPlay, bingo: viewBingo };
 
   // Test hook for the local Playwright run only (?test on localhost); nothing to see in production.
   if ((location.hostname === 'localhost' || location.hostname === '127.0.0.1') && /[?&]test\b/.test(location.search)) {
-    window.__bingo = { state: state, drawCard: drawCard, buildPdf: buildPdf, jpegBytes: jpegBytes, parseBingo: parseBingo, fontsReady: fontsReady };
+    window.__bingo = { state: state, drawCard: drawCard, buildPdf: buildPdf, jpegBytes: jpegBytes, parseBingo: parseBingo, fontsReady: fontsReady, judge: judge, bingoPayload: bingoPayload };
   }
 
-  render(true);
+  cleanOldLive();
+  var startCode = livePath();
+  if (startCode) loadLive(startCode); else render(true);
 
   // Visit counter for Ellen's project board: one count per browser per day, nothing else.
   // The date is remembered in this browser only; the server just adds 1 to today's number.
