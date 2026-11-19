@@ -1,6 +1,6 @@
 # bingo, by Ellenial
 
-A free social bingo maker for parties, work kick-offs, car trips and Christmas. Write 9 things that might happen, choose how many cards and how to win, and every player gets the same 9 squares in their own order. Send each card as a picture straight into a chat, or print them all from one PDF.
+A free social bingo maker for parties, work kick-offs, car trips and Christmas. Pick a 3 × 3 or 5 × 5 card, write 9 or 25 things that might happen, choose how many cards and how to win, and every player gets the same squares in their own order. Send each card as a picture straight into a chat, or print them all from one PDF.
 
 Play at **https://bingo.ellenial.app**
 
@@ -15,12 +15,13 @@ Part of [Ellenial](https://ellenial.app): free tools made by people, for people.
 ## How it works
 
 - A plain web app: HTML, CSS and JavaScript, no build step, no framework, no libraries.
-- Cards: random orders of the 9 squares (`crypto.getRandomValues`, Fisher–Yates), never two the same. 2 to 30 cards, numbered "Card 3 of 8".
-- How to win: one line, two lines or a full card, chosen by the person making the bingo and printed on every card.
-- Free square in the middle: optional (off by default). With it on you write 8 squares, shuffled around a free centre marked with a star and the word "Free".
+- Card size: 3 × 3 (default) or 5 × 5. On 5 × 5 the squares are a numbered list, and "Paste a list" fills them from one line per square. Switching size keeps what you wrote for the other one.
+- Cards: random orders of the squares (`crypto.getRandomValues`, Fisher–Yates), never two the same. 2 to 30 cards, numbered "Card 3 of 8".
+- How to win: one line, two lines, four corners (5 × 5 only) or a full card, chosen by the person making the bingo and printed on every card.
+- Free square in the middle: optional (off by default on 3 × 3, on by default on 5 × 5). With it on you write one square fewer, shuffled around a free centre marked with a star and the word "Free".
 - Pictures: drawn on a canvas, 1080 × 1350 px (4:5, shown uncropped in chat apps), light palette so they read and print well. Long squares shrink, then wrap; a word is only split if it can't fit whole at the smallest size.
 - Sharing: the phone's own share menu (Web Share API) where it can take files; otherwise the picture downloads.
-- PDF: written by hand in `app.js` (A4, two cards per page with a cut line or one bigger card per page, the same cards on white to save ink, as JPEG). The bingo rides along as a comment line, `%EllenialBingo:<base64url JSON>`.
+- PDF: written by hand in `app.js` (A4, two cards per page with a cut line (5 × 5: the page turns sideways, cards side by side) or one bigger card per page, the same cards on white to save ink, as JPEG). The bingo rides along as a comment line, `%EllenialBingo:<base64url JSON>`.
 - English and Swedish, picked from the phone's language with a switch on the first screen.
 - Help: a "?" in the top-right corner of every screen opens "How it works" in three steps. Nothing pops up by itself.
 - Every picture and PDF card ends with "Created in bingo.ellenial.app · Free, no ads, no trackers. Bingo!"

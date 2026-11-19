@@ -45,7 +45,19 @@ Read this first in every session. Social bingo maker under **Ellenial**, English
 - Roll out the shared "?" help to Quiz, Poll, Party games and the other apps (each needs its own 3 steps, shown to Ellen first).
 - List on ellenial.app when Ellen decides (alpha).
 - (Done 8 Nov) The PDF prints on white to save ink; shared pictures keep the peach ground.
-- Later: fill together (live room), 4×4 and 5×5, a tappable card in the browser.
+- Later: fill together (live room), 4×4, a tappable card in the browser. (5×5 built 19 Nov.)
+
+## Decisions (Ellen, 19 Nov 2026): 5 × 5
+- 5 × 5 is a choice next to 3 × 3, not a replacement: "it's a choice to choose either and the option needs to exist". 3 × 3 stays the default. Mock-up screens 11–13 approved.
+- Free middle on by default for 5 × 5 (write 24), still off by default for 3 × 3.
+- Win rules on 5 × 5: one line, two lines, four corners (new, 5 × 5 only), full card (all 25).
+
+## Build notes (19 Nov 2026)
+- `state.size` (3|5); `center()` = 4 or 12; `state.keep[size]` holds the other size's squares and free choice, so switching back loses nothing.
+- Write screen on 5 × 5: numbered list of inputs (not a grid), "Paste a list" (one per line, leading 1. / - / • stripped, fills in order around the free middle). Examples carry 16 extra squares (`more`) for 5 × 5.
+- Picture: same 1080 × 1350 canvas and same 960 px grid; 5 × 5 cells ~181 px, text 34→20 px. Preview grid `.cells5`.
+- PDF: 5 × 5 with 2 per page prints A4 sideways, cards side by side (squares ~22 mm); 1 per page as before. Payload adds `size`; cards are one base-36 character per square (0–8 on 3 × 3, so old PDFs and the old format are unchanged; 0–9a–o on 5 × 5). `parseBingo` checks size 3|5, square count, card shape per size, the free centre, and the win rule allowed for the size. A 5 × 5 PDF is rejected by the old app version (wrong square count), as it should be.
+- Tested 19 Nov: Playwright 390×844, dark/light, en/sv: switching sizes, paste, examples, 10 unique cards with the centre free, four corners rule, PDF 2/page (5 sideways pages) and 1/page (10), reopened to the same cards; old 3 × 3 payload still opens; crafted payloads (size 4, wrong counts, corners on 3 × 3, bad cards) rejected or cleaned. axe-core: 0 violations on all new screens, light and dark. No console errors.
 
 ## Brand
 - Final Ellenial brand: same tokens, fonts and theme switch as poll and quiz. Theme key `eb:theme-pref`. Test with `?theme=light|dark`. Copy in first person ("I").

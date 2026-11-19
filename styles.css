@@ -204,3 +204,19 @@ h1.q.small { font-size: 26px; line-height: 1.2; }
 .wordmark { display: inline-flex; align-items: center; gap: 10px; }
 .wordmark .brand-icon { width: 44px; height: 44px; border-radius: 10px; flex: none; display: block; }
 .wordmark .brand-name { display: flex; flex-direction: column; }
+
+/* 5 × 5 as a choice next to 3 × 3 (19 Nov 2026) */
+.seg.size button { min-height: 56px; }
+.size-txt { display: flex; flex-direction: column; align-items: center; line-height: 1.2; }
+.size-txt small { font-size: 12px; font-weight: 500; }
+.sq-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 6px; }
+.sq-list li { display: flex; align-items: center; gap: 10px; }
+.sq-num { width: 24px; flex: none; text-align: right; font-size: 13px; font-weight: 700; color: var(--muted); }
+.sq-line { min-height: 48px; padding: 0 12px; }
+.sq-line:placeholder-shown { border-style: dashed; }
+.paste { background: var(--surface); border: 1px solid var(--line); border-radius: 16px; padding: 12px; }
+.paste textarea { resize: vertical; min-height: 140px; line-height: 1.4; }
+.choice .pattern { flex: none; }
+.cells5 { grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 4px; }
+.cells5 .cell { padding: 3px; border-radius: 7px; border-width: 1.5px; font-size: 10px; line-height: 1.15; overflow: hidden; overflow-wrap: anywhere; }
+.cells5 .cell.free { gap: 0; font-size: 10.5px; }

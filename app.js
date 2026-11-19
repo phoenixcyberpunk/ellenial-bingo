@@ -1,6 +1,6 @@
 /* ellenial bingo
-   A social bingo maker. Write 9 things, choose how many cards and how to win, and every player
-   gets the same 9 squares in their own order. Cards go out as pictures (one per player, made on
+   A social bingo maker. Pick 3 × 3 or 5 × 5, write 9 or 25 things, choose how many cards and how
+   to win, and every player gets the same squares in their own order. Cards go out as pictures (one per player, made on
    this phone with a canvas) or as one PDF to print (also made on this phone, no library).
    Nothing you make is sent anywhere or saved: the PDF itself carries the bingo, so opening it
    here again brings the squares back. Only the language and theme choice stay on this device.
@@ -17,16 +17,17 @@
     en: {
       other: 'Svenska', otherLang: 'sv',
       makeTitle: 'Make a bingo',
-      makeLead: 'Write 9 things that might happen. Everyone gets the same 9, in their own order.',
+      makeLead: function (n, free) { return 'Write ' + n + ' things that might happen. Everyone gets the same ' + n + ', in their own order' + (free ? ', around a free middle.' : '.'); },
       nameLabel: 'Name your bingo', namePh: 'Kick-off bingo',
-      squaresLabel: 'Your 9 squares', squarePh: 'Square',
+      squaresLabel: function (n) { return 'Your ' + n + ' squares'; }, squarePh: 'Square',
       filled: function (n, of) { return (n === of ? '✓ ' : '') + n + ' of ' + of; },
-      makeLeadFree: 'Write 8 things that might happen. Everyone gets the same 8, in their own order, around a free middle.',
-      squaresLabelFree: 'Your 8 squares',
-      freeLabel: 'Free square in the middle', freeHint: 'Already marked for everyone, so you write 8. Makes lines quicker to get.',
+      freeLabel: 'Free square in the middle', freeHint: function (n) { return 'Already marked for everyone, so you write ' + n + '. Makes lines quicker to get.'; },
+      sizeLabel: 'Card size', sizes: { 3: ['3 × 3', '9 squares'], 5: ['5 × 5', '25 squares'] },
+      paste: 'Paste a list', pasteLabel: 'One square per line', pasteUse: 'Use these', pasteCancel: 'Cancel',
+      pasted: function (n) { return n + (n === 1 ? ' square' : ' squares') + ' filled from your list.'; },
       free: 'Free',
       perPage: 'Cards per printed page', perPage2: '2 per page', perPage1: '1 per page',
-      perPageNote: function (n) { var two = Math.ceil(n / 2); return '2 per page: ' + two + (two === 1 ? ' sheet' : ' sheets') + ', cut along the dashed line. 1 per page: ' + n + ' sheets, bigger cards.'; },
+      perPageNote: function (n, side) { var two = Math.ceil(n / 2); return '2 per page: ' + two + (two === 1 ? ' sheet' : ' sheets') + (side ? ' printed sideways' : '') + ', cut along the dashed line. 1 per page: ' + n + ' sheets, bigger cards.'; },
       examplesLabel: 'Stuck? Start from an example and change it',
       examplesReplaced: 'Your squares were replaced.', undo: 'Undo',
       next: 'Next: cards and how to win',
@@ -44,9 +45,10 @@
       win: {
         line: ['One line', 'A row, column or diagonal'],
         two: ['Two lines', 'Any two rows, columns or diagonals'],
-        full: ['Full card', 'All 9 squares']
+        corners: ['Four corners', 'A quick round, just the four corners'],
+        full: ['Full card', function (n) { return 'All ' + n + ' squares'; }]
       },
-      winRule: { line: 'One line wins: a row, column or diagonal', two: 'Two lines win: any two rows, columns or diagonals', full: 'A full card wins: all 9 squares' },
+      winRule: { line: 'One line wins: a row, column or diagonal', two: 'Two lines win: any two rows, columns or diagonals', corners: 'Four corners win: all four corner squares', full: function (n) { return 'A full card wins: all ' + n + ' squares'; } },
       shuffle: function (n) { return 'Shuffle ' + n + ' cards'; },
       previewTitle: function (n) { return 'Your ' + n + ' cards'; },
       previewLead: 'Swipe or use the arrows to see each one.',
@@ -67,32 +69,38 @@
         label: 'How it works', title: 'How it works', lead: 'Three steps, about two minutes.', done: 'Got it', close: 'Close',
         note: "Nothing you make is saved or sent anywhere. Close the tab and it's gone, except the files you download. In this app: a simple visit counter.",
         steps: [
-          { title: 'Write your squares', text: '9 things that might happen, or 8 around a free middle. Stuck? Start from an example.' },
-          { title: 'Choose cards and how to win', text: 'How many players, and whether one line, two lines or a full card wins.' },
+          { title: 'Write your squares', text: 'Pick 3 × 3 or 5 × 5, then write 9 or 25 things that might happen (one fewer around a free middle). Stuck? Start from an example.' },
+          { title: 'Choose cards and how to win', text: 'How many players, and whether one line, two lines, four corners (5 × 5) or a full card wins.' },
           { title: 'Send a card to each player', text: 'Share a picture into the chat, or print the PDF. Keep the PDF: open it here again to play with the same cards.' }
         ]
       },
       fileCard: 'card', theme: 'Appearance', themeLabels: { auto: 'Auto', light: 'Light', dark: 'Dark' },
       examples: [
-        { name: 'Party', title: 'Party bingo', items: ['Someone mentions the weather', 'A toast in another language', 'Someone arrives late', "A story you've heard before", 'A phone rings', 'Someone sings along', 'A selfie with the host', 'Someone says "just one more"', 'A laugh you can hear across the room'] },
-        { name: 'Work kick-off', title: 'Kick-off bingo', items: ['"Can you see my screen?"', 'Someone is on mute', '"Let\'s take that offline"', 'A new acronym', 'The coffee runs out', 'Someone shows a photo of their pet', 'A slide with too much text', '"Quick question"', 'Someone says "synergy"'] },
-        { name: 'Car trip', title: 'Car trip bingo', items: ['A red car', 'A cow', '"Are we there yet?"', 'A petrol station', 'Someone sings to the radio', 'A bridge', 'A caravan', 'A snack break', 'A sign with a funny name'] },
-        { name: 'Christmas', title: 'Christmas bingo', items: ['Someone falls asleep on the sofa', 'A Christmas song on the radio', 'Someone wears a Christmas jumper', 'A present gets shaken', 'Someone asks for the recipe', 'Rice pudding', 'A board game comes out', '"I said no presents this year"', 'Someone takes the last chocolate'] }
+        // items: the 9 for 3 × 3; more: 16 extra for 5 × 5 (25 in all).
+        { name: 'Party', title: 'Party bingo', items: ['Someone mentions the weather', 'A toast in another language', 'Someone arrives late', "A story you've heard before", 'A phone rings', 'Someone sings along', 'A selfie with the host', 'Someone says "just one more"', 'A laugh you can hear across the room'],
+          more: ['Someone spills a drink', 'A dance move nobody asked for', 'Someone talks about work', 'A group photo', 'Someone loses their phone', '"Who brought this?"', 'A song gets requested twice', 'Someone takes their shoes off', "An inside joke you don't get", 'Someone leaves without saying bye', 'Cake', 'Someone checks a score', '"We should do this more often"', 'Someone finds the cat', 'A new friendship', 'The last bus is mentioned'] },
+        { name: 'Work kick-off', title: 'Kick-off bingo', items: ['"Can you see my screen?"', 'Someone is on mute', '"Let\'s take that offline"', 'A new acronym', 'The coffee runs out', 'Someone shows a photo of their pet', 'A slide with too much text', '"Quick question"', 'Someone says "synergy"'],
+          more: ['Someone joins late', 'An echo on the call', '"Let\'s circle back"', 'A dog barks', '"Can everyone hear me?"', 'The wrong slide is shown', 'Someone eats on camera', '"Low-hanging fruit"', 'The meeting runs over', '"Let\'s park that"', 'Frozen video', '"Per my last email"', 'Someone says "ping"', 'A laptop battery dies', '"Sorry, go ahead"', 'Someone forgets to share'] },
+        { name: 'Car trip', title: 'Car trip bingo', items: ['A red car', 'A cow', '"Are we there yet?"', 'A petrol station', 'Someone sings to the radio', 'A bridge', 'A caravan', 'A snack break', 'A sign with a funny name'],
+          more: ['A tractor', 'A horse', 'A motorbike', 'Roadworks', 'A toilet stop', 'Someone falls asleep', 'A traffic jam', 'A church', 'A blue car', 'A sheep', 'A windmill', 'A lake', '"I need the loo"', 'A police car', 'A moose sign', 'A lorry'] },
+        { name: 'Christmas', title: 'Christmas bingo', items: ['Someone falls asleep on the sofa', 'A Christmas song on the radio', 'Someone wears a Christmas jumper', 'A present gets shaken', 'Someone asks for the recipe', 'Rice pudding', 'A board game comes out', '"I said no presents this year"', 'Someone takes the last chocolate'],
+          more: ['Someone cries at a film', 'Ham on the table', 'Herring', 'A candle almost tips over', 'Snow outside', 'A present wrapped last minute', 'Donald Duck on TV', 'Someone mentions last Christmas', 'Mulled wine', 'A pet in a Santa hat', 'Someone says "so cosy"', 'Too much food', 'Toffee', 'Someone forgets a name', 'A present that needs batteries', 'Someone goes for a walk'] }
       ]
     },
     sv: {
       other: 'English', otherLang: 'en',
       makeTitle: 'Gör en bingo',
-      makeLead: 'Skriv 9 saker som kan hända. Alla får samma 9, i sin egen ordning.',
+      makeLead: function (n, free) { return 'Skriv ' + n + ' saker som kan hända. Alla får samma ' + n + ', i sin egen ordning' + (free ? ', runt en fri mitt.' : '.'); },
       nameLabel: 'Döp din bingo', namePh: 'Kickoff-bingo',
-      squaresLabel: 'Dina 9 rutor', squarePh: 'Ruta',
+      squaresLabel: function (n) { return 'Dina ' + n + ' rutor'; }, squarePh: 'Ruta',
       filled: function (n, of) { return (n === of ? '✓ ' : '') + n + ' av ' + of; },
-      makeLeadFree: 'Skriv 8 saker som kan hända. Alla får samma 8, i sin egen ordning, runt en fri mitt.',
-      squaresLabelFree: 'Dina 8 rutor',
-      freeLabel: 'Fri ruta i mitten', freeHint: 'Redan markerad för alla, så du skriver 8. Gör det lättare att få rader.',
+      freeLabel: 'Fri ruta i mitten', freeHint: function (n) { return 'Redan markerad för alla, så du skriver ' + n + '. Gör det lättare att få rader.'; },
+      sizeLabel: 'Brickans storlek', sizes: { 3: ['3 × 3', '9 rutor'], 5: ['5 × 5', '25 rutor'] },
+      paste: 'Klistra in en lista', pasteLabel: 'En ruta per rad', pasteUse: 'Använd dessa', pasteCancel: 'Avbryt',
+      pasted: function (n) { return n + (n === 1 ? ' ruta' : ' rutor') + ' fylldes från din lista.'; },
       free: 'Fri',
       perPage: 'Brickor per utskriven sida', perPage2: '2 per sida', perPage1: '1 per sida',
-      perPageNote: function (n) { var two = Math.ceil(n / 2); return '2 per sida: ' + two + (two === 1 ? ' ark' : ' ark') + ', klipp längs den streckade linjen. 1 per sida: ' + n + ' ark, större brickor.'; },
+      perPageNote: function (n, side) { var two = Math.ceil(n / 2); return '2 per sida: ' + two + ' ark' + (side ? ' i liggande format' : '') + ', klipp längs den streckade linjen. 1 per sida: ' + n + ' ark, större brickor.'; },
       examplesLabel: 'Kört fast? Börja från ett exempel och ändra',
       examplesReplaced: 'Dina rutor byttes ut.', undo: 'Ångra',
       next: 'Nästa: brickor och hur man vinner',
@@ -110,9 +118,10 @@
       win: {
         line: ['En rad', 'En rad, kolumn eller diagonal'],
         two: ['Två rader', 'Två valfria rader, kolumner eller diagonaler'],
-        full: ['Full bricka', 'Alla 9 rutor']
+        corners: ['Fyra hörn', 'En snabb runda, bara de fyra hörnen'],
+        full: ['Full bricka', function (n) { return 'Alla ' + n + ' rutor'; }]
       },
-      winRule: { line: 'En rad vinner: rad, kolumn eller diagonal', two: 'Två rader vinner: valfria rader, kolumner eller diagonaler', full: 'Full bricka vinner: alla 9 rutor' },
+      winRule: { line: 'En rad vinner: rad, kolumn eller diagonal', two: 'Två rader vinner: valfria rader, kolumner eller diagonaler', corners: 'Fyra hörn vinner: alla fyra hörnrutorna', full: function (n) { return 'Full bricka vinner: alla ' + n + ' rutor'; } },
       shuffle: function (n) { return 'Blanda ' + n + ' brickor'; },
       previewTitle: function (n) { return 'Dina ' + n + ' brickor'; },
       previewLead: 'Svep eller använd pilarna för att se varje bricka.',
@@ -133,17 +142,21 @@
         label: 'Så funkar det', title: 'Så funkar det', lead: 'Tre steg, ungefär två minuter.', done: 'Uppfattat', close: 'Stäng',
         note: 'Inget du gör sparas eller skickas någonstans. Stäng fliken så är det borta, utom filerna du laddar ner. I den här appen: en enkel besöksräknare.',
         steps: [
-          { title: 'Skriv dina rutor', text: '9 saker som kan hända, eller 8 runt en fri mitt. Kört fast? Börja från ett exempel.' },
-          { title: 'Välj brickor och hur man vinner', text: 'Hur många spelare, och om en rad, två rader eller full bricka vinner.' },
+          { title: 'Skriv dina rutor', text: 'Välj 3 × 3 eller 5 × 5 och skriv 9 eller 25 saker som kan hända (en färre runt en fri mitt). Kört fast? Börja från ett exempel.' },
+          { title: 'Välj brickor och hur man vinner', text: 'Hur många spelare, och om en rad, två rader, fyra hörn (5 × 5) eller full bricka vinner.' },
           { title: 'Skicka en bricka till varje spelare', text: 'Dela en bild i chatten, eller skriv ut PDF:en. Spara PDF:en: öppna den här igen för att spela med samma brickor.' }
         ]
       },
       fileCard: 'bricka', theme: 'Utseende', themeLabels: { auto: 'Auto', light: 'Ljust', dark: 'Mörkt' },
       examples: [
-        { name: 'Fest', title: 'Festbingo', items: ['Någon pratar om vädret', 'En skål på ett annat språk', 'Någon kommer sent', 'En historia du hört förut', 'En telefon ringer', 'Någon sjunger med', 'En selfie med värden', 'Någon säger "bara en till"', 'Ett skratt som hörs i hela rummet'] },
-        { name: 'Kickoff', title: 'Kickoff-bingo', items: ['"Ser ni min skärm?"', 'Någon har mikrofonen avstängd', '"Vi tar det efteråt"', 'En ny förkortning', 'Kaffet tar slut', 'Någon visar en bild på sitt husdjur', 'En bild med för mycket text', '"En snabb fråga"', 'Någon säger "synergi"'] },
-        { name: 'Bilresa', title: 'Bilbingo', items: ['En röd bil', 'En ko', '"Är vi framme snart?"', 'En bensinmack', 'Någon sjunger till radion', 'En bro', 'En husvagn', 'Fikapaus', 'En skylt med ett roligt namn'] },
-        { name: 'Jul', title: 'Julbingo', items: ['Någon somnar i soffan', 'En julsång på radion', 'Någon har jultröja', 'Någon skakar en julklapp', 'Någon frågar efter receptet', 'Risgrynsgröt', 'Ett sällskapsspel tas fram', '"Vi sa inga julklappar i år"', 'Någon tar den sista chokladen'] }
+        { name: 'Fest', title: 'Festbingo', items: ['Någon pratar om vädret', 'En skål på ett annat språk', 'Någon kommer sent', 'En historia du hört förut', 'En telefon ringer', 'Någon sjunger med', 'En selfie med värden', 'Någon säger "bara en till"', 'Ett skratt som hörs i hela rummet'],
+          more: ['Någon spiller en drink', 'Ett dansmove ingen bad om', 'Någon pratar jobb', 'Ett gruppfoto', 'Någon tappar bort sin telefon', '"Vem tog med det här?"', 'En låt önskas två gånger', 'Någon tar av sig skorna', 'Ett internskämt du inte fattar', 'Någon går utan att säga hej då', 'Tårta', 'Någon kollar ett matchresultat', '"Vi borde göra det här oftare"', 'Någon hittar katten', 'En ny vänskap', 'Sista bussen nämns'] },
+        { name: 'Kickoff', title: 'Kickoff-bingo', items: ['"Ser ni min skärm?"', 'Någon har mikrofonen avstängd', '"Vi tar det efteråt"', 'En ny förkortning', 'Kaffet tar slut', 'Någon visar en bild på sitt husdjur', 'En bild med för mycket text', '"En snabb fråga"', 'Någon säger "synergi"'],
+          more: ['Någon ansluter sent', 'Eko i samtalet', '"Vi återkommer till det"', 'En hund skäller', '"Hör alla mig?"', 'Fel bild visas', 'Någon äter i kameran', '"Lågt hängande frukt"', 'Mötet drar över', '"Vi parkerar den"', 'Frusen bild', '"Som jag skrev i mejlet"', 'Någon säger "pinga"', 'Ett laptopbatteri dör', '"Förlåt, kör du"', 'Någon glömmer att dela'] },
+        { name: 'Bilresa', title: 'Bilbingo', items: ['En röd bil', 'En ko', '"Är vi framme snart?"', 'En bensinmack', 'Någon sjunger till radion', 'En bro', 'En husvagn', 'Fikapaus', 'En skylt med ett roligt namn'],
+          more: ['En traktor', 'En häst', 'En motorcykel', 'Vägarbete', 'Toastopp', 'Någon somnar', 'Bilkö', 'En kyrka', 'En blå bil', 'Ett får', 'En väderkvarn', 'En sjö', '"Jag måste kissa"', 'En polisbil', 'En älgskylt', 'En lastbil'] },
+        { name: 'Jul', title: 'Julbingo', items: ['Någon somnar i soffan', 'En julsång på radion', 'Någon har jultröja', 'Någon skakar en julklapp', 'Någon frågar efter receptet', 'Risgrynsgröt', 'Ett sällskapsspel tas fram', '"Vi sa inga julklappar i år"', 'Någon tar den sista chokladen'],
+          more: ['Någon gråter till en film', 'Skinka på bordet', 'Sill', 'Ett ljus håller på att välta', 'Snö ute', 'En klapp slås in i sista stund', 'Kalle Anka på tv', 'Någon pratar om förra julen', 'Glögg', 'Ett husdjur i tomteluva', 'Någon säger "så mysigt"', 'För mycket mat', 'Knäck', 'Någon glömmer ett namn', 'En klapp som behöver batterier', 'Någon tar en promenad'] }
       ]
     }
   };
@@ -155,7 +168,10 @@
   var state = {
     view: 'write',
     title: '',
-    squares: ['', '', '', '', '', '', '', '', ''],
+    size: 3,          // 3 (default) or 5 (Ellen, 19 Nov 2026): the creator picks either
+    squares: blank(9),
+    keep: {},         // the other size's squares and free choice, so switching back loses nothing
+    pasteOpen: false,
     count: 8,
     win: 'line',
     free: false,      // free square in the middle (Ellen, 8 Nov 2026): off by default
@@ -219,8 +235,15 @@
   }
   function pageIcon(k) {
     var s = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-    s.setAttribute('width', 16); s.setAttribute('height', 22); s.setAttribute('viewBox', '0 0 16 22'); s.setAttribute('aria-hidden', 'true');
+    s.setAttribute('aria-hidden', 'true');
     s.setAttribute('fill', 'none'); s.setAttribute('stroke', 'currentColor'); s.setAttribute('stroke-width', '1.6');
+    if (k === 2 && state.size === 5) {
+      // 5 × 5 prints two cards side by side on a sideways page.
+      s.setAttribute('width', 22); s.setAttribute('height', 16); s.setAttribute('viewBox', '0 0 22 16');
+      s.innerHTML = '<rect x="1" y="1" width="20" height="14" rx="1.5"/><rect x="3" y="4" width="7" height="8" rx="1"/><rect x="12" y="4" width="7" height="8" rx="1"/>';
+      return s;
+    }
+    s.setAttribute('width', 16); s.setAttribute('height', 22); s.setAttribute('viewBox', '0 0 16 22');
     s.innerHTML = '<rect x="1" y="1" width="14" height="20" rx="1.5"/>' + (k === 2
       ? '<rect x="4" y="3" width="8" height="7" rx="1"/><rect x="4" y="12" width="8" height="7" rx="1"/>'
       : '<rect x="3" y="4" width="10" height="13" rx="1"/>');
@@ -246,9 +269,40 @@
     if (!window.EllenialTheme) return null;
     return EllenialTheme.control({ label: t().theme, labels: t().themeLabels });
   }
-  function needed() { return state.free ? 8 : 9; }
+  function blank(n) { var a = []; for (var i = 0; i < n; i++) a.push(''); return a; }
+  function cellsN() { return state.size * state.size; }
+  function center() { return (cellsN() - 1) / 2; }   // 4 on 3 × 3, 12 on 5 × 5
+  function isFree(i) { return state.free && i === center(); }
+  function needed() { return cellsN() - (state.free ? 1 : 0); }
   function filledCount() {
-    return state.squares.filter(function (s, i) { return !(state.free && i === 4) && clean(s, LIMITS.square); }).length;
+    return state.squares.filter(function (s, i) { return !isFree(i) && clean(s, LIMITS.square); }).length;
+  }
+  function winKeys() { return state.size === 5 ? ['line', 'two', 'corners', 'full'] : ['line', 'two', 'full']; }
+  function winText(k) { var w = t().win[k]; return [w[0], typeof w[1] === 'function' ? w[1](cellsN()) : w[1]]; }
+  function ruleText(k) { var r = t().winRule[k]; return typeof r === 'function' ? r(cellsN()) : r; }
+  // Free middle defaults: off on 3 × 3 (8 Nov), on for 5 × 5 (classic bingo, 19 Nov).
+  function setSize(n) {
+    if (n === state.size) return;
+    state.keep[state.size] = { squares: state.squares, free: state.free };
+    var k = state.keep[n];
+    state.size = n; state.squares = k ? k.squares : blank(n * n); state.free = k ? k.free : n === 5;
+    if (winKeys().indexOf(state.win) < 0) state.win = 'line';
+    state.undo = null; state.pasteOpen = false;
+    render();
+  }
+  // A small picture of each win pattern, beside its words (never the picture alone).
+  function winPattern(k) {
+    var n = state.size, u = 30 / n, s = document.createElementNS('http://www.w3.org/2000/svg', 'svg'), out = '';
+    s.setAttribute('width', 30); s.setAttribute('height', 30); s.setAttribute('viewBox', '0 0 30 30'); s.setAttribute('aria-hidden', 'true');
+    s.setAttribute('class', 'pattern');
+    for (var r = 0; r < n; r++) for (var c = 0; c < n; c++) {
+      var mid = (n - 1) / 2, on = k === 'full' || (k === 'line' && r === mid) || (k === 'two' && (r === mid - 1 || c === mid + 1)) ||
+        (k === 'corners' && (r === 0 || r === n - 1) && (c === 0 || c === n - 1));
+      out += '<rect x="' + (c * u + 1) + '" y="' + (r * u + 1) + '" width="' + (u - 2) + '" height="' + (u - 2) + '" rx="1" ' +
+        (on ? 'fill="currentColor"' : 'fill="none" stroke="currentColor" stroke-width="0.8" opacity="0.55"') + '/>';
+    }
+    s.innerHTML = out;
+    return s;
   }
   function go(view) { state.view = view; state.note = ''; render(true); }
   function render(top) {
@@ -289,25 +343,36 @@
     do { crypto.getRandomValues(buf); } while (buf[0] >= lim);
     return buf[0] % n;
   }
-  // With a free middle, the 8 other squares are shuffled around it and position 4 always holds 4 (the free one).
+  // With a free middle, the other squares are shuffled around it and the centre always holds itself (the free one).
   function perm() {
-    var a = state.free ? [0, 1, 2, 3, 5, 6, 7, 8] : [0, 1, 2, 3, 4, 5, 6, 7, 8];
+    var a = [], c = center();
+    for (var k = 0; k < cellsN(); k++) if (!isFree(k)) a.push(k);
     for (var i = a.length - 1; i > 0; i--) { var j = randInt(i + 1), x = a[i]; a[i] = a[j]; a[j] = x; }
-    if (state.free) a.splice(4, 0, 4);
+    if (state.free) a.splice(c, 0, c);
     return a;
   }
-  // n different orders of the same squares (9! = 362 880, or 8! = 40 320 with a free middle: never a repeat).
+  // n different orders of the same squares (at least 8! = 40 320 orders: never a repeat).
   function shuffleCards(n) {
     var seen = {}, out = [];
     while (out.length < n) {
-      var p = perm(), k = p.join('');
+      var p = perm(), k = p.join(',');
       if (!seen[k]) { seen[k] = 1; out.push(p); }
     }
     return out;
   }
   var FREE = null;   // marks the free middle in a card's list of squares
   function cardSquares(i) {
-    return state.cards[i].map(function (k, pos) { return state.free && pos === 4 ? FREE : clean(state.squares[k], LIMITS.square); });
+    return state.cards[i].map(function (k, pos) { return isFree(pos) ? FREE : clean(state.squares[k], LIMITS.square); });
+  }
+  // Fill squares in order (skipping a free middle) from a list; returns how many were filled.
+  function fillFrom(list) {
+    var sq = blank(cellsN()), j = 0;
+    for (var i = 0; i < sq.length; i++) {
+      if (isFree(i)) { sq[i] = state.squares[i] || ''; continue; }
+      if (j < list.length) sq[i] = clean(list[j++], LIMITS.square);
+    }
+    state.squares = sq;
+    return j;
   }
 
   /* ---------------- view 1: write your 9 ---------------- */
@@ -334,20 +399,62 @@
       hint.textContent = c < of ? t().needAll(c, of) : (!nm ? t().needName : '');
       hint.hidden = !hint.textContent;
     }
-    var boxes = state.squares.map(function (s, i) {
-      if (state.free && i === 4) {
-        return h('div', { class: 'sq free', role: 'img', 'aria-label': t().freeLabel }, starIcon(24), h('span', { text: t().free }));
-      }
-      return h('textarea', {
-        id: 'sq' + i, class: 'sq', rows: 3, maxlength: LIMITS.square,
-        'aria-label': t().squarePh + ' ' + (i + 1), placeholder: t().squarePh + ' ' + (i + 1),
-        value: s,
-        oninput: function (e) { state.squares[i] = e.target.value.replace(/\n/g, ' '); update(); },
-        onkeydown: function (e) {
-          if (e.key === 'Enter') { e.preventDefault(); var nx = document.getElementById('sq' + (i + 1)) || document.getElementById('sq' + (i + 2)); (nx || nextBtn).focus(); }
+    function toNext(i) {
+      var nx = null;
+      for (var k = i + 1; k < cellsN() && !nx; k++) nx = document.getElementById('sq' + k);
+      (nx || nextBtn).focus();
+    }
+    var squaresLabel = t().squaresLabel(of), boxes, num = 0;
+    if (state.size === 5) {
+      // 5 × 5: a numbered list, since 25 text boxes in a phone-wide grid are too small to type in.
+      boxes = h('ol', { class: 'sq-list', 'aria-label': squaresLabel }, state.squares.map(function (s, i) {
+        if (isFree(i)) return null;
+        num++;
+        return h('li', null,
+          h('span', { class: 'sq-num', 'aria-hidden': 'true', text: String(num) }),
+          h('input', {
+            id: 'sq' + i, class: 'input sq-line', maxlength: LIMITS.square, autocomplete: 'off', enterkeyhint: 'next',
+            'aria-label': t().squarePh + ' ' + num, placeholder: t().squarePh + ' ' + num, value: s,
+            oninput: function (e) { state.squares[i] = e.target.value; update(); },
+            onkeydown: function (e) { if (e.key === 'Enter') { e.preventDefault(); toNext(i); } }
+          }));
+      }));
+    } else {
+      boxes = h('div', { class: 'grid9', role: 'group', 'aria-label': squaresLabel }, state.squares.map(function (s, i) {
+        if (isFree(i)) {
+          return h('div', { class: 'sq free', role: 'img', 'aria-label': t().freeLabel }, starIcon(24), h('span', { text: t().free }));
         }
-      });
-    });
+        return h('textarea', {
+          id: 'sq' + i, class: 'sq', rows: 3, maxlength: LIMITS.square,
+          'aria-label': t().squarePh + ' ' + (i + 1), placeholder: t().squarePh + ' ' + (i + 1),
+          value: s,
+          oninput: function (e) { state.squares[i] = e.target.value.replace(/\n/g, ' '); update(); },
+          onkeydown: function (e) { if (e.key === 'Enter') { e.preventDefault(); toNext(i); } }
+        });
+      }));
+    }
+    function keepUndo() {
+      var had = filledCount() > 0 || clean(state.title, 40);
+      state.undo = had ? { title: state.title, squares: state.squares.slice() } : null;
+    }
+    var pasteBox = state.pasteOpen ? h('div', { class: 'paste stack', style: 'gap:8px' },
+      h('label', { class: 'field', for: 'pastebox' }, h('span', { text: t().pasteLabel }),
+        h('textarea', { id: 'pastebox', class: 'input', rows: 6, maxlength: 4000 })),
+      h('div', { class: 'row-between', style: 'align-items:center' },
+        h('button', { class: 'btn link', onclick: function () { state.pasteOpen = false; render(); } }, t().pasteCancel),
+        h('button', { id: 'pasteuse', class: 'btn small', onclick: function () {
+          var lines = document.getElementById('pastebox').value.split(/\r?\n/).map(function (l) { return clean(l.replace(/^\s*(\d+[.)]|[-*•])\s+/, ''), LIMITS.square); }).filter(Boolean);
+          if (!lines.length) return;
+          keepUndo();
+          var n = fillFrom(lines);
+          state.pasteOpen = false; state.note = t().pasted(n); render();
+        } }, t().pasteUse))) : null;
+    var sizeSeg = h('div', { class: 'stack', style: 'gap:8px' },
+      h('span', { id: 'sizelbl', style: 'font-size:14px;font-weight:700', text: t().sizeLabel }),
+      h('div', { class: 'seg two size', role: 'group', 'aria-labelledby': 'sizelbl' }, [3, 5].map(function (n) {
+        return h('button', { id: 'size' + n, 'aria-pressed': String(state.size === n), onclick: function () { setSize(n); } },
+          h('span', { class: 'size-txt' }, h('span', { text: t().sizes[n][0] }), h('small', { text: t().sizes[n][1] })));
+      })));
     var fileInput = h('input', { type: 'file', accept: 'application/pdf,.pdf', class: 'sr-only', tabindex: '-1', 'aria-hidden': 'true', onchange: function (e) {
       var f = e.target.files && e.target.files[0]; if (f) openPdf(f);
     } });
@@ -355,22 +462,28 @@
       topBar(null),
       h('div', { class: 'stack', style: 'gap:6px' },
         h('h1', { class: 'q', text: t().makeTitle }),
-        h('p', { class: 'lead', text: state.free ? t().makeLeadFree : t().makeLead })),
+        h('p', { class: 'lead', text: t().makeLead(of, state.free) })),
       state.note ? h('p', { class: 'toast', role: 'status', text: state.note }) : null,
       h('label', { class: 'field', for: 'bname' }, h('span', { text: t().nameLabel }), nameInput),
+      sizeSeg,
       h('label', { class: 'check' + (state.free ? ' on' : '') },
         h('input', { id: 'free', type: 'checkbox', checked: state.free, onchange: function (e) { state.free = e.target.checked; render(); } }),
-        h('span', null, h('strong', { text: t().freeLabel }), h('small', { text: t().freeHint }))),
+        h('span', null, h('strong', { text: t().freeLabel }), h('small', { text: t().freeHint(cellsN() - 1) }))),
       h('div', { class: 'stack', style: 'gap:8px' },
-        h('div', { class: 'row-between' }, h('span', { style: 'font-size:14px;font-weight:700', text: state.free ? t().squaresLabelFree : t().squaresLabel }), counter),
-        h('div', { class: 'grid9', role: 'group', 'aria-label': state.free ? t().squaresLabelFree : t().squaresLabel }, boxes)),
+        h('div', { class: 'row-between', style: 'align-items:center' },
+          h('span', { style: 'font-size:14px;font-weight:700' }, squaresLabel, ' ', counter),
+          state.pasteOpen ? null : h('button', { id: 'paste', class: 'lang', 'aria-expanded': 'false', onclick: function () {
+            state.pasteOpen = true; render(); var pb = document.getElementById('pastebox'); if (pb) pb.focus();
+          } }, t().paste)),
+        pasteBox,
+        boxes),
       h('div', { class: 'stack', style: 'gap:8px' },
         h('span', { class: 'note', text: t().examplesLabel }),
         h('div', { class: 'chips' }, t().examples.map(function (ex) {
           return h('button', { class: 'pill', onclick: function () {
-            var had = filledCount() > 0 || clean(state.title, 40);
-            state.undo = had ? { title: state.title, squares: state.squares.slice() } : null;
-            state.squares = ex.items.slice(); state.title = ex.title;
+            keepUndo();
+            // All 9 (or 25) in place, the middle one too: switching the free middle off brings it back.
+            state.squares = state.size === 5 ? ex.items.concat(ex.more) : ex.items.slice(); state.title = ex.title;
             render();
           } }, ex.name);
         })),
@@ -408,17 +521,21 @@
 
   function viewSettings() {
     function setCount(v) { state.count = Math.max(LIMITS.minCards, Math.min(LIMITS.maxCards, v)); render(); }
-    var choices = ['line', 'two', 'full'].map(function (k) {
+    var keys = winKeys(), m = keys.length;
+    if (keys.indexOf(state.win) < 0) state.win = 'line';
+    var choices = keys.map(function (k) {
+      var w = winText(k);
       return h('button', { id: 'win-' + k, class: 'choice', role: 'radio', 'aria-checked': String(state.win === k),
         tabindex: state.win === k ? '0' : '-1',
         onclick: function () { state.win = k; render(); },
         onkeydown: function (e) {
-          var keys = ['line', 'two', 'full'], i = keys.indexOf(k);
-          if (e.key === 'ArrowDown' || e.key === 'ArrowRight') { e.preventDefault(); state.win = keys[(i + 1) % 3]; render(); document.getElementById('win-' + state.win).focus(); }
-          if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') { e.preventDefault(); state.win = keys[(i + 2) % 3]; render(); document.getElementById('win-' + state.win).focus(); }
+          var i = keys.indexOf(k);
+          if (e.key === 'ArrowDown' || e.key === 'ArrowRight') { e.preventDefault(); state.win = keys[(i + 1) % m]; render(); document.getElementById('win-' + state.win).focus(); }
+          if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') { e.preventDefault(); state.win = keys[(i + m - 1) % m]; render(); document.getElementById('win-' + state.win).focus(); }
         } },
         h('span', { class: 'tick', 'aria-hidden': 'true', text: '✓' }),
-        h('span', null, h('strong', { text: t().win[k][0] }), h('small', { text: t().win[k][1] })));
+        winPattern(k),
+        h('span', null, h('strong', { text: w[0] }), h('small', { text: w[1] })));
     });
     return h('div', { class: 'page' },
       topBar('write'),
@@ -449,10 +566,10 @@
       h('div', { class: 'bingo-head' },
         h('span', { class: 'bingo-title', text: state.title }),
         h('span', { class: 'card-no', text: t().cardOf(i + 1, n) })),
-      h('div', { class: 'cells' }, cardSquares(i).map(function (s) {
-        return s === FREE ? h('div', { class: 'cell free' }, starIcon(20), h('span', { text: t().free })) : h('div', { class: 'cell', text: s });
+      h('div', { class: 'cells' + (state.size === 5 ? ' cells5' : '') }, cardSquares(i).map(function (s) {
+        return s === FREE ? h('div', { class: 'cell free' }, starIcon(state.size === 5 ? 14 : 20), h('span', { text: t().free })) : h('div', { class: 'cell', text: s });
       })),
-      h('span', { class: 'note', text: t().winRule[state.win] }));
+      h('span', { class: 'note', text: ruleText(state.win) }));
     var x0 = null;
     card.addEventListener('touchstart', function (e) { x0 = e.touches[0].clientX; }, { passive: true });
     card.addEventListener('touchend', function (e) {
@@ -509,13 +626,13 @@
           return h('button', { id: 'pp' + k, 'aria-pressed': String(state.perPage === k), onclick: function () { state.perPage = k; render(); } },
             pageIcon(k), k === 2 ? t().perPage2 : t().perPage1);
         })),
-        h('p', { class: 'note', text: t().perPageNote(n) })),
+        h('p', { class: 'note', text: t().perPageNote(n, state.size === 5) })),
       h('div', { class: 'stack' },
         h('button', { id: 'pdf', class: 'btn', onclick: downloadPdf }, icon('save'), t().pdf),
         h('button', { id: 'allpics', class: 'btn ghost', onclick: saveAll }, t().allPics(n))),
       h('p', { class: 'note', text: t().shareFoot }),
       h('button', { class: 'btn link', style: 'align-self:center', onclick: function () {
-        state.title = ''; state.squares = ['', '', '', '', '', '', '', '', '']; state.cards = []; state.sent = {}; state.undo = null; state.free = false;
+        state.title = ''; state.squares = blank(cellsN()); state.keep = {}; state.cards = []; state.sent = {}; state.undo = null; state.free = state.size === 5;
         go('write');
       } }, t().startOver));
   }
@@ -625,23 +742,26 @@
     var ty = pad + (title.lines.length === 1 ? 62 : title.lh - 6);
     title.lines.slice(0, 2).forEach(function (l, k) { ctx.fillText(l, pad, ty + k * title.lh); runAt(ctx, runs, l, pad, ty + k * title.lh, title.size); });
 
-    // The 3 x 3 grid
-    var gy = 220, gap = 20, cell = (W - pad * 2 - gap * 2) / 3, inner = cell - 48, sq = cardSquares(i);
+    // The grid: 3 x 3 or 5 x 5, always the same 960 px square, so the rest of the card stays put.
+    var N = state.size, five = N === 5;
+    var gy = 220, gap = five ? 14 : 20, cell = (W - pad * 2 - gap * (N - 1)) / N, inner = cell - (five ? 20 : 48), sq = cardSquares(i);
     ctx.textAlign = 'center';
     sq.forEach(function (s, k) {
-      var x = pad + (k % 3) * (cell + gap), y = gy + Math.floor(k / 3) * (cell + gap);
-      roundRect(ctx, x, y, cell, cell, 24); ctx.fillStyle = s === FREE ? PAL.free : PAL.surface; ctx.fill();
-      ctx.lineWidth = 5; ctx.strokeStyle = PAL.accent; ctx.stroke();
+      var x = pad + (k % N) * (cell + gap), y = gy + Math.floor(k / N) * (cell + gap);
+      roundRect(ctx, x, y, cell, cell, five ? 14 : 24); ctx.fillStyle = s === FREE ? PAL.free : PAL.surface; ctx.fill();
+      ctx.lineWidth = five ? 4 : 5; ctx.strokeStyle = PAL.accent; ctx.stroke();
       if (s === FREE) {
         // A star and the word, so it never relies on colour alone.
-        ctx.save(); ctx.translate(x + cell / 2 - 48, y + cell / 2 - 92); ctx.scale(4, 4);
+        var sc = five ? 2.2 : 4, star = 24 * sc, fs = five ? 28 : 44;
+        ctx.save(); ctx.translate(x + cell / 2 - star / 2, y + cell / 2 - (five ? 55 : 92)); ctx.scale(sc, sc);
         ctx.fillStyle = PAL.accent; ctx.fill(new Path2D(STAR)); ctx.restore();
-        ctx.fillStyle = PAL.ink; ctx.font = '700 44px ' + SANS;
-        ctx.fillText(t().free, x + cell / 2, y + cell / 2 + 64);
-        runAt(ctx, runs, t().free, x + cell / 2, y + cell / 2 + 64, 44);
+        ctx.fillStyle = PAL.ink; ctx.font = '700 ' + fs + 'px ' + SANS;
+        var fy = y + cell / 2 + (five ? 36 : 64);
+        ctx.fillText(t().free, x + cell / 2, fy);
+        runAt(ctx, runs, t().free, x + cell / 2, fy, fs);
         return;
       }
-      var f = fitText(ctx, s, '500 {s}px ' + SANS, inner, inner, 46, 24);
+      var f = five ? fitText(ctx, s, '500 {s}px ' + SANS, inner, inner, 34, 20) : fitText(ctx, s, '500 {s}px ' + SANS, inner, inner, 46, 24);
       ctx.fillStyle = PAL.ink; ctx.font = '500 ' + f.size + 'px ' + SANS;
       var top = y + (cell - f.lines.length * f.lh) / 2 + f.lh * 0.78;
       f.lines.forEach(function (l, j) { ctx.fillText(l, x + cell / 2, top + j * f.lh); runAt(ctx, runs, l, x + cell / 2, top + j * f.lh, f.size); });
@@ -649,8 +769,8 @@
 
     // Win rule and address
     ctx.textAlign = 'left';
-    var below = gy + cell * 3 + gap * 2;
-    var rule = fitText(ctx, t().winRule[state.win], '500 {s}px ' + SANS, W - pad * 2, 50, 38, 26);
+    var below = gy + cell * N + gap * (N - 1);
+    var rule = fitText(ctx, ruleText(state.win), '500 {s}px ' + SANS, W - pad * 2, 50, 38, 26);
     ctx.fillStyle = PAL.ink; ctx.font = '500 ' + rule.size + 'px ' + SANS;
     ctx.fillText(rule.lines[0], pad, below + 70);
     runAt(ctx, runs, rule.lines[0], pad, below + 70, rule.size);
@@ -736,11 +856,14 @@
   function buildPdf(images) {
     var enc = new TextEncoder(), parts = [], len = 0, offsets = [];
     function push(x) { var b = typeof x === 'string' ? enc.encode(x) : x; parts.push(b); len += b.length; }
-    var payload = b64u(JSON.stringify({ v: 1, title: state.title, squares: state.squares, count: state.cards.length, win: state.win, free: state.free, perPage: state.perPage, cards: state.cards.map(function (c) { return c.join(''); }), lang: lang }));
+    // Cards are written one character per square: 0–8 on 3 × 3 (as before 19 Nov), 0–9 and a–o on 5 × 5.
+    var payload = b64u(JSON.stringify({ v: 1, size: state.size, title: state.title, squares: state.squares, count: state.cards.length, win: state.win, free: state.free, perPage: state.perPage, cards: state.cards.map(function (c) { return c.map(function (k) { return k.toString(36); }).join(''); }), lang: lang }));
     push('%PDF-1.4\n%\xe2\xe3\xcf\xd3\n'.replace(/[\x80-\xff]/g, '~'));
     push(PDF_MARK + payload + '\n');
     var per = state.perPage === 1 ? 1 : 2;
-    var pw = 595.28, ph = 841.89, cardH = per === 1 ? 640 : 380, cardW = cardH * W / H, x = (pw - cardW) / 2;
+    // 5 × 5, 2 per page: A4 turned sideways, two cards side by side, so the squares stay big enough to read (~22 mm).
+    var side = per === 2 && state.size === 5;
+    var pw = side ? 841.89 : 595.28, ph = side ? 595.28 : 841.89, cardH = per === 1 ? 640 : side ? 475 : 380, cardW = cardH * W / H, x = (pw - cardW) / 2;
     var pages = Math.ceil(images.length / per);
     // object numbers: 1 catalog, 2 pages, 3 info, 4 font (for the hidden text), then per page: page, content, img1, img2?
     var next = 5, pageIds = [], pageObjs = [];
@@ -759,11 +882,16 @@
       obj(ids.page, '<< /Type /Page /Parent 2 0 R /MediaBox [0 0 ' + pw + ' ' + ph + '] /Resources << /XObject << ' + xo + ' >> /Font << /F1 4 0 R >> >> /Contents ' + ids.content + ' 0 R >>');
       var s = '';
       ids.imgs.forEach(function (im, k) {
-        var y = per === 1 ? (ph - cardH) / 2 : (k === 0 ? ph - 30 - cardH : 30);
-        s += 'q ' + cardW.toFixed(2) + ' 0 0 ' + cardH + ' ' + x.toFixed(2) + ' ' + y.toFixed(2) + ' cm /C' + k + ' Do Q\n';
-        s += textLayer(im.runs || [], W, H, x, y, cardW, cardH);
+        var y = per === 1 || side ? (ph - cardH) / 2 : (k === 0 ? ph - 30 - cardH : 30);
+        var cx = side ? (k === 0 ? (pw / 2 - cardW) / 2 : pw / 2 + (pw / 2 - cardW) / 2) : x;
+        s += 'q ' + cardW.toFixed(2) + ' 0 0 ' + cardH + ' ' + cx.toFixed(2) + ' ' + y.toFixed(2) + ' cm /C' + k + ' Do Q\n';
+        s += textLayer(im.runs || [], W, H, cx, y, cardW, cardH);
       });
-      if (ids.imgs.length === 2) s += 'q 0.6 0.6 0.6 RG 0.75 w [6 4] 0 d 40 ' + (ph / 2).toFixed(2) + ' m ' + (pw - 40).toFixed(2) + ' ' + (ph / 2).toFixed(2) + ' l S Q\n';
+      if (ids.imgs.length === 2) {
+        s += side
+          ? 'q 0.6 0.6 0.6 RG 0.75 w [6 4] 0 d ' + (pw / 2).toFixed(2) + ' 30 m ' + (pw / 2).toFixed(2) + ' ' + (ph - 30).toFixed(2) + ' l S Q\n'
+          : 'q 0.6 0.6 0.6 RG 0.75 w [6 4] 0 d 40 ' + (ph / 2).toFixed(2) + ' m ' + (pw - 40).toFixed(2) + ' ' + (ph / 2).toFixed(2) + ' l S Q\n';
+      }
       obj(ids.content, '<< /Length ' + enc.encode(s).length + ' >>\nstream\n' + s + 'endstream');
       ids.imgs.forEach(function (im) {
         obj(im.id, function () {
@@ -791,9 +919,10 @@
     head.arrayBuffer().then(function (buf) {
       var bytes = new Uint8Array(buf), s = '';
       for (var i = 0; i < bytes.length; i++) s += String.fromCharCode(bytes[i]);
-      var m = s.match(/%EllenialBingo:([A-Za-z0-9_-]{10,20000})/);
+      var m = s.match(/%EllenialBingo:([A-Za-z0-9_-]{10,40000})/);
       var b = m && parseBingo(m[1]);
       if (!b) { state.note = t().openBad; render(); return; }
+      state.size = b.size; state.keep = {}; state.pasteOpen = false;
       state.title = b.title; state.squares = b.squares; state.count = b.count; state.win = b.win; state.free = b.free; state.perPage = b.perPage;
       state.cards = b.cards; state.idx = 0; state.sent = {}; state.undo = null;
       if (b.lang && b.lang !== lang) { lang = b.lang; }
@@ -803,18 +932,25 @@
   function parseBingo(p) {
     try {
       var d = JSON.parse(fromB64u(p));
-      if (!d || d.v !== 1 || typeof d.title !== 'string' || !Array.isArray(d.squares) || d.squares.length !== 9) return null;
+      // No size = a 3 × 3 PDF from before 19 Nov 2026.
+      var size = d.size === undefined || d.size === 3 ? 3 : d.size === 5 ? 5 : 0, nn = size * size, mid = (nn - 1) / 2;
+      if (!d || d.v !== 1 || !size || typeof d.title !== 'string' || !Array.isArray(d.squares) || d.squares.length !== nn) return null;
       var squares = d.squares.map(function (x) { return clean(x, LIMITS.square); });
       var title = clean(d.title, LIMITS.title), free = d.free === true;
-      if (!title || squares.some(function (x, i) { return !x && !(free && i === 4); })) return null;
-      var win = ['line', 'two', 'full'].indexOf(d.win) >= 0 ? d.win : 'line';
+      if (!title || squares.some(function (x, i) { return !x && !(free && i === mid); })) return null;
+      var wins = size === 5 ? ['line', 'two', 'corners', 'full'] : ['line', 'two', 'full'];
+      var win = wins.indexOf(d.win) >= 0 ? d.win : 'line';
+      var shape = size === 5 ? /^[0-9a-o]{25}$/ : /^[0-8]{9}$/, midCh = mid.toString(36);
       var cards = Array.isArray(d.cards) ? d.cards.filter(function (c) {
-        return typeof c === 'string' && /^[0-8]{9}$/.test(c) && new Set(c.split('')).size === 9 && (!free || c[4] === '4');
+        return typeof c === 'string' && shape.test(c) && new Set(c.split('')).size === nn && (!free || c[mid] === midCh);
       }).filter(function (c, i, all) { return all.indexOf(c) === i; })   // never two cards the same
-        .slice(0, LIMITS.maxCards).map(function (c) { return c.split('').map(Number); }) : [];
+        .slice(0, LIMITS.maxCards).map(function (c) { return c.split('').map(function (ch) { return parseInt(ch, 36); }); }) : [];
       var count = Math.max(LIMITS.minCards, Math.min(LIMITS.maxCards, cards.length || parseInt(d.count, 10) || 8));
-      if (cards.length < LIMITS.minCards) { var was = state.free; state.free = free; cards = shuffleCards(count); state.free = was; }
-      return { title: title, squares: squares, count: cards.length, win: win, cards: cards, free: free, perPage: d.perPage === 1 ? 1 : 2, lang: d.lang === 'sv' || d.lang === 'en' ? d.lang : null };
+      if (cards.length < LIMITS.minCards) {
+        var was = { free: state.free, size: state.size }; state.free = free; state.size = size;
+        cards = shuffleCards(count); state.free = was.free; state.size = was.size;
+      }
+      return { size: size, title: title, squares: squares, count: cards.length, win: win, cards: cards, free: free, perPage: d.perPage === 1 ? 1 : 2, lang: d.lang === 'sv' || d.lang === 'en' ? d.lang : null };
     } catch (e) { return null; }
   }
 
