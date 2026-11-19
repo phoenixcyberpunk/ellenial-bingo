@@ -320,7 +320,8 @@
     return h('div', { class: 'bar' },
       h('div', { class: 'bar-left' },
         backTo ? h('button', { class: 'round', 'aria-label': t().back, onclick: function () { go(backTo); } }, icon('back', 22)) : null,
-        (backTo && state.title ? h('span', { class: 'wordmark', text: state.title }) : h('span', { class: 'wordmark' }, h('img', { class: 'brand-icon', src: '/icons/icon-192.png', alt: '', width: '44', height: '44' }), h('span', { class: 'brand-name' }, h('span', { class: 'ellenial-eyebrow', text: 'Ellenial' }), 'Bingo')))),
+        // Icon, "Ellenial" eyebrow and "Bingo" on every screen (Ellen, 19 Nov 2026); the bingo's own name sits under the heading.
+        h('span', { class: 'wordmark' }, h('img', { class: 'brand-icon', src: '/icons/icon-192.png', alt: '', width: '44', height: '44' }), h('span', { class: 'brand-name' }, h('span', { class: 'ellenial-eyebrow', text: 'Ellenial' }), 'Bingo'))),
       h('div', { class: 'bar-right' },
         backTo ? null : h('button', { class: 'lang', lang: t().otherLang, onclick: function () {
           lang = t().otherLang; store('eb:lang', lang); render();
@@ -539,7 +540,7 @@
     });
     return h('div', { class: 'page' },
       topBar('write'),
-      h('h1', { class: 'q', text: t().settingsTitle }),
+      h('div', { class: 'stack', style: 'gap:4px' }, h('h1', { class: 'q', text: t().settingsTitle }), h('p', { class: 'bingo-sub', text: state.title + ' · ' + state.size + ' × ' + state.size })),
       h('section', { class: 'panel' },
         h('h2', { id: 'howmany', text: t().howMany }),
         h('div', { class: 'stepper' },
@@ -616,6 +617,7 @@
       topBar('preview'),
       h('div', { class: 'stack', style: 'gap:6px' },
         h('h1', { class: 'q small', text: t().shareTitle }),
+        h('p', { class: 'bingo-sub', text: state.title + ' · ' + state.size + ' × ' + state.size }),
         h('p', { class: 'note', style: 'font-size:14px', text: t().shareLead })),
       h('div', { class: 'cards-list' }, rows),
       state.note ? h('p', { class: 'toast', role: 'status', text: state.note }) : null,

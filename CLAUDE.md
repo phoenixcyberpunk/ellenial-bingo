@@ -59,6 +59,8 @@ Read this first in every session. Social bingo maker under **Ellenial**, English
 - PDF: 5 × 5 with 2 per page prints A4 sideways, cards side by side (squares ~22 mm); 1 per page as before. Payload adds `size`; cards are one base-36 character per square (0–8 on 3 × 3, so old PDFs and the old format are unchanged; 0–9a–o on 5 × 5). `parseBingo` checks size 3|5, square count, card shape per size, the free centre, and the win rule allowed for the size. A 5 × 5 PDF is rejected by the old app version (wrong square count), as it should be.
 - Tested 19 Nov: Playwright 390×844, dark/light, en/sv: switching sizes, paste, examples, 10 unique cards with the centre free, four corners rule, PDF 2/page (5 sideways pages) and 1/page (10), reopened to the same cards; old 3 × 3 payload still opens; crafted payloads (size 4, wrong counts, corners on 3 × 3, bad cards) rejected or cleaned. axe-core: 0 violations on all new screens, light and dark. No console errors.
 
+- (19 Nov, Ellen) The header shows the icon, the "Ellenial" eyebrow and "Bingo" on every screen; the bingo's own name and size sit under the heading on Settings and Share (`.bingo-sub`).
+
 ## Brand
 - Final Ellenial brand: same tokens, fonts and theme switch as poll and quiz. Theme key `eb:theme-pref`. Test with `?theme=light|dark`. Copy in first person ("I").
 - Accessibility: text ≥ 4.5:1, controls ≥ 3:1, never colour alone (✓ on the chosen win rule, "✓ Shared" with the word).

@@ -220,3 +220,6 @@ h1.q.small { font-size: 26px; line-height: 1.2; }
 .cells5 { grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 4px; }
 .cells5 .cell { padding: 3px; border-radius: 7px; border-width: 1.5px; font-size: 10px; line-height: 1.15; overflow: hidden; overflow-wrap: anywhere; }
 .cells5 .cell.free { gap: 0; font-size: 10.5px; }
+
+/* The bingo's own name under the heading, now that the header always says Ellenial Bingo (19 Nov 2026) */
+.bingo-sub { margin: 0; font-size: 15px; color: var(--muted); overflow-wrap: anywhere; }
